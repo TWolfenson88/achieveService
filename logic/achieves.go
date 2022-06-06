@@ -1,4 +1,4 @@
-package logic
+package main
 
 import (
 	"time"
@@ -6,10 +6,13 @@ import (
 
 type Achieve struct {
 	Id int
-	Name string
+	MaxLevel int
+	BeginLevel int
+	ScansCountForLvl map[int]int
+	NameForLvl map[int]string
 	PeriodStart time.Time
 	PeriodEnd time.Time
-	OpenedAchieves []AchieveElem
+	NeedAchieves map[int]AchieveElem
 }
 
 type AchieveElem struct {
@@ -22,60 +25,81 @@ type AchieveList map[int]Achieve
 
 type UserAchieve struct {
 	AchieveId int
-	AchieveCount int
-	LastActivation time.Time
+	AchieveLvl int
+	ScanCount int
+	Name string
+	LastScan time.Time
 }
 
 type User struct {
 	Id int
+	UsrLvl int
 	Achieves map[int]UserAchieve
 }
 
-func (a *Achieve) CheckConditons(user User) bool {
-	t := time.Now()
-
-	if !(a.PeriodStart.Hour() < t.Hour() && a.PeriodEnd.Hour() > t.Hour()){
-		return false
-	}
-
-	if a.OpenedAchieves == nil {
+func (a Achieve) checkConditions(usrAchs map[int]UserAchieve) bool {
+	
+	if a.NeedAchieves == nil {
 		return true
-	}else{
-		for _, achieve := range a.OpenedAchieves {
-			uAch, ok := user.Achieves[achieve.NeedId]
-			if !ok || uAch.AchieveCount != achieve.NeedCount || (time.Now().Sub(uAch.LastActivation)) > achieve.Duration {
-				return false
-			}
-		}
 	}
 
-	return true
+/*	for _, uAch := range usrAchs {
+		fmt.Println(uAch.AchieveId)
+		if ach, ok := a.NeedAchieves[uAch.AchieveId]; !ok {
+			fmt.Println("need ach ne ok")
+			return false
+		}else if (time.Now().Sub(uAch.LastScan) > ach.Duration && ach.Duration > 0) || (uAch.ScanCount) < ach.NeedCount{
+			fmt.Println("this ne ok")
+			return false
+		}
+	}
+	return true*/
+
+	for _, elem := range a.NeedAchieves {
+		if uAch, ok := usrAchs[elem.NeedId]; !ok {
+			return false
+		}else if (time.Now().Sub(uAch.LastScan) > elem.Duration && elem.Duration != 0) || elem.NeedCount > uAch.ScanCount {
+			return false
+		}
+	}
+return true
 }
 
-func (u *User) GetAllAchieves() []UserAchieve {
-	var allAchieves []UserAchieve
-	for _, achieve := range u.Achieves {
-		allAchieves = append(allAchieves, achieve)
+func (al AchieveList) convertToUserAchieve(achId int) UserAchieve {
+	ach := al[achId]
+	return UserAchieve{
+		AchieveId:  ach.Id,
+		AchieveLvl: ach.BeginLevel,
+		ScanCount:  1,
+		Name:       ach.NameForLvl[ach.BeginLevel],
+		LastScan:   time.Time{},
 	}
-	return allAchieves
 }
 
-func (u *User) AddAchieve(achieve Achieve)  {
+func (u User) haveAchieve(achId int) bool {
+	_, ok := u.Achieves[achId]
+	return ok
+}
 
-	if uAch, ok := u.Achieves[achieve.Id]; achieve.CheckConditons(*u) && !ok{
-		u.Achieves = map[int]UserAchieve{}
-		u.Achieves[achieve.Id] = UserAchieve{
-			AchieveId:      achieve.Id,
-			AchieveCount:   1,
-			LastActivation: time.Now(),
-		}
-	}else if achieve.CheckConditons(*u) && ok {
-		uAch.AchieveCount++
-		u.Achieves[achieve.Id] = UserAchieve{
-			AchieveId:      achieve.Id,
-			AchieveCount:   uAch.AchieveCount,
-			LastActivation: time.Now(),
+func (u User) AddAchieve(scanTime time.Time, achId, usrId int) {
+	if !u.haveAchieve(achId){
+		uAch := achList.convertToUserAchieve(achId)
+		uAch.LastScan = scanTime
+		uAch.ScanCount = 1
+		u.Achieves[achId] = uAch
+	}else {
+		uAch := u.Achieves[achId]
+		ach := achList[achId]
+		uAch.ScanCount++
+		u.Achieves[achId] = uAch
+		//fmt.Println("here here ", ach.checkConditions(u.Achieves))
+		if uAch.AchieveLvl == ach.MaxLevel || ach.ScansCountForLvl[uAch.AchieveLvl+1] < uAch.ScanCount {
+			//fmt.Println("here here ")
+			return
+		}else if ach.checkConditions(u.Achieves) && ach.ScansCountForLvl[uAch.AchieveLvl+1] == uAch.ScanCount{
+			uAch.Name = ach.NameForLvl[uAch.AchieveLvl+1]
+			uAch.AchieveLvl++
+			u.Achieves[achId] = uAch
 		}
 	}
-
 }
