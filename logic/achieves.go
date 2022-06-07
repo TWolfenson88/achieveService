@@ -43,18 +43,6 @@ func (a Achieve) checkConditions(usrAchs map[int]UserAchieve) bool {
 		return true
 	}
 
-/*	for _, uAch := range usrAchs {
-		fmt.Println(uAch.AchieveId)
-		if ach, ok := a.NeedAchieves[uAch.AchieveId]; !ok {
-			fmt.Println("need ach ne ok")
-			return false
-		}else if (time.Now().Sub(uAch.LastScan) > ach.Duration && ach.Duration > 0) || (uAch.ScanCount) < ach.NeedCount{
-			fmt.Println("this ne ok")
-			return false
-		}
-	}
-	return true*/
-
 	for _, elem := range a.NeedAchieves {
 		if uAch, ok := usrAchs[elem.NeedId]; !ok {
 			return false
@@ -81,20 +69,33 @@ func (u User) haveAchieve(achId int) bool {
 	return ok
 }
 
-func (u User) AddAchieve(scanTime time.Time, achId, usrId int) {
-	if !u.haveAchieve(achId){
+func isScanInInterval(a Achieve, t time.Time) bool {
+	if a.PeriodEnd.Sub(a.PeriodStart) == 0 {
+		return true
+	}
+
+	hr, min, _ := t.Clock()
+	tt := time.Time{}.Add(time.Duration(hr)*time.Hour + time.Duration(min)*time.Minute)
+
+	if a.PeriodStart.Before(tt) && a.PeriodEnd.After(tt) {
+		return true
+	}
+
+	return false
+}
+
+func (u User) AddAchieve(scanTime time.Time, achId int) {
+	if !u.haveAchieve(achId) && isScanInInterval(achList[achId], scanTime){
 		uAch := achList.convertToUserAchieve(achId)
 		uAch.LastScan = scanTime
 		uAch.ScanCount = 1
 		u.Achieves[achId] = uAch
-	}else {
+	}else if isScanInInterval(achList[achId], scanTime) {
 		uAch := u.Achieves[achId]
 		ach := achList[achId]
 		uAch.ScanCount++
 		u.Achieves[achId] = uAch
-		//fmt.Println("here here ", ach.checkConditions(u.Achieves))
 		if uAch.AchieveLvl == ach.MaxLevel || ach.ScansCountForLvl[uAch.AchieveLvl+1] < uAch.ScanCount {
-			//fmt.Println("here here ")
 			return
 		}else if ach.checkConditions(u.Achieves) && ach.ScansCountForLvl[uAch.AchieveLvl+1] == uAch.ScanCount{
 			uAch.Name = ach.NameForLvl[uAch.AchieveLvl+1]

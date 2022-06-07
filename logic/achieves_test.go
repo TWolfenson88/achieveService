@@ -138,6 +138,34 @@ func TestCheckConditions(t *testing.T){
 
 }
 
+func TestIsScanInInterval(t *testing.T) {
+
+	t.Run("zero time diff", func(t *testing.T) {
+		tt := time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local) //not in achieve diapason
+		result := isScanInInterval(achList[0], tt)
+
+		require.True(t, result)
+	})
+	t.Run("not in interval", func(t *testing.T) {
+		tt := time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local) //not in achieve diapason
+		result := isScanInInterval(achList[5], tt)
+
+		require.False(t, result)
+	})
+	t.Run("not in minute interval", func(t *testing.T) {
+			tt := time.Date(2022, time.June, 7, 10, 0, 0, 0, time.Local) //not in achieve diapason
+		result := isScanInInterval(achList[5], tt)
+
+		require.False(t, result)
+	})
+	t.Run("in interval", func(t *testing.T) {
+		tt := time.Date(2022, time.June, 7, 10, 30, 0, 0, time.Local) //not in achieve diapason
+		result := isScanInInterval(achList[5], tt)
+
+		require.True(t, result)
+	})
+}
+
 func TestAddAchieve(t *testing.T) {
 	t.Run("add one simple achieve", func(t *testing.T) {
 		user := User{
@@ -213,5 +241,65 @@ func TestAddAchieve(t *testing.T) {
 		req := 1
 
 		require.Equal(t, req, user.Achieves[4].AchieveLvl)
+	})
+	t.Run("add max level for multilevel complex achieve", func(t *testing.T) {
+		user := User{
+			Id:       1,
+			UsrLvl:   0,
+			Achieves: map[int]UserAchieve{},
+		}
+
+		user.AddAchieve(time.Now(), 3, 1)
+		user.AddAchieve(time.Now(), 3, 1)
+		user.AddAchieve(time.Now(), 3, 1)
+
+		user.AddAchieve(time.Now(), 4, 1)
+		user.AddAchieve(time.Now(), 4, 1)
+		user.AddAchieve(time.Now(), 4, 1)
+
+		user.AddAchieve(time.Now(), 4, 1)
+		user.AddAchieve(time.Now(), 4, 1)
+		user.AddAchieve(time.Now(), 4, 1)
+
+		user.AddAchieve(time.Now(), 4, 1)
+		user.AddAchieve(time.Now(), 4, 1)
+		user.AddAchieve(time.Now(), 4, 1)
+
+		req := 3
+
+		require.Equal(t, req, user.Achieves[4].AchieveLvl)
+	})
+	t.Run("check time of added achieve", func(t *testing.T) {
+		user := User{
+			Id:       1,
+			UsrLvl:   0,
+			Achieves: map[int]UserAchieve{},
+		}
+
+		tt := time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local) //not in achieve interval
+
+		user.AddAchieve(tt, 5, 1)
+
+		req := achList.convertToUserAchieve(5)
+		req.LastScan = tt
+
+		require.NotEqual(t, req, user.Achieves[5])
+	})
+
+	t.Run("check time in interval", func(t *testing.T) {
+		user := User{
+			Id:       1,
+			UsrLvl:   0,
+			Achieves: map[int]UserAchieve{},
+		}
+
+		tt := time.Date(2022, time.June, 7, 10, 30, 0, 0, time.Local) //in achieve interval
+
+		user.AddAchieve(tt, 5, 1)
+
+		req := achList.convertToUserAchieve(5)
+		req.LastScan = tt
+
+		require.Equal(t, req, user.Achieves[5])
 	})
 }
