@@ -37,7 +37,7 @@ type User struct {
 	Achieves map[int]UserAchieve
 }
 
-func (a Achieve) checkConditions(usrAchs map[int]UserAchieve) bool {
+func (a *Achieve) checkConditions(usrAchs map[int]UserAchieve) bool {
 	
 	if a.NeedAchieves == nil {
 		return true
@@ -64,7 +64,7 @@ func (al AchieveList) convertToUserAchieve(achId int) UserAchieve {
 	}
 }
 
-func (u User) haveAchieve(achId int) bool {
+func (u *User) haveAchieve(achId int) bool {
 	_, ok := u.Achieves[achId]
 	return ok
 }
@@ -84,7 +84,7 @@ func isScanInInterval(a Achieve, t time.Time) bool {
 	return false
 }
 
-func (u User) AddAchieve(scanTime time.Time, achId int) {
+func (u *User) AddAchieve(scanTime time.Time, achId int) {
 	if !u.haveAchieve(achId) && isScanInInterval(achList[achId], scanTime){
 		uAch := achList.convertToUserAchieve(achId)
 		uAch.LastScan = scanTime

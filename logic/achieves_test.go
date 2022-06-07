@@ -174,7 +174,7 @@ func TestAddAchieve(t *testing.T) {
 			Achieves: map[int]UserAchieve{},
 		}
 
-		user.AddAchieve(time.Now(), 2, 1)
+		user.AddAchieve(time.Now(), 2)
 
 		req := achList.convertToUserAchieve(2)
 		req.LastScan = time.Now()
@@ -188,13 +188,13 @@ func TestAddAchieve(t *testing.T) {
 			Achieves: map[int]UserAchieve{},
 		}
 
-		user.AddAchieve(time.Now(), 3, 1)
-		user.AddAchieve(time.Now(), 3, 1)
-		user.AddAchieve(time.Now(), 3, 1)
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
 
-		user.AddAchieve(time.Now(), 3, 1)
-		user.AddAchieve(time.Now(), 3, 1)
-		user.AddAchieve(time.Now(), 3, 1)
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
 
 		req := 2
 
@@ -207,17 +207,17 @@ func TestAddAchieve(t *testing.T) {
 			Achieves: map[int]UserAchieve{},
 		}
 
-		user.AddAchieve(time.Now(), 3, 1)
-		user.AddAchieve(time.Now(), 3, 1)
-		user.AddAchieve(time.Now(), 3, 1)
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
 
-		user.AddAchieve(time.Now(), 3, 1)
-		user.AddAchieve(time.Now(), 3, 1)
-		user.AddAchieve(time.Now(), 3, 1)
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
 
-		user.AddAchieve(time.Now(), 3, 1)
-		user.AddAchieve(time.Now(), 3, 1)
-		user.AddAchieve(time.Now(), 3, 1)
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
 
 		req := 3
 
@@ -230,13 +230,13 @@ func TestAddAchieve(t *testing.T) {
 			Achieves: map[int]UserAchieve{},
 		}
 
-		user.AddAchieve(time.Now(), 3, 1)
-		user.AddAchieve(time.Now(), 3, 1)
-		user.AddAchieve(time.Now(), 3, 1)
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
 
-		user.AddAchieve(time.Now(), 4, 1)
-		user.AddAchieve(time.Now(), 4, 1)
-		user.AddAchieve(time.Now(), 4, 1)
+		user.AddAchieve(time.Now(), 4)
+		user.AddAchieve(time.Now(), 4)
+		user.AddAchieve(time.Now(), 4)
 
 		req := 1
 
@@ -249,21 +249,21 @@ func TestAddAchieve(t *testing.T) {
 			Achieves: map[int]UserAchieve{},
 		}
 
-		user.AddAchieve(time.Now(), 3, 1)
-		user.AddAchieve(time.Now(), 3, 1)
-		user.AddAchieve(time.Now(), 3, 1)
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
 
-		user.AddAchieve(time.Now(), 4, 1)
-		user.AddAchieve(time.Now(), 4, 1)
-		user.AddAchieve(time.Now(), 4, 1)
+		user.AddAchieve(time.Now(), 4)
+		user.AddAchieve(time.Now(), 4)
+		user.AddAchieve(time.Now(), 4)
 
-		user.AddAchieve(time.Now(), 4, 1)
-		user.AddAchieve(time.Now(), 4, 1)
-		user.AddAchieve(time.Now(), 4, 1)
+		user.AddAchieve(time.Now(), 4)
+		user.AddAchieve(time.Now(), 4)
+		user.AddAchieve(time.Now(), 4)
 
-		user.AddAchieve(time.Now(), 4, 1)
-		user.AddAchieve(time.Now(), 4, 1)
-		user.AddAchieve(time.Now(), 4, 1)
+		user.AddAchieve(time.Now(), 4)
+		user.AddAchieve(time.Now(), 4)
+		user.AddAchieve(time.Now(), 4)
 
 		req := 3
 
@@ -278,7 +278,7 @@ func TestAddAchieve(t *testing.T) {
 
 		tt := time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local) //not in achieve interval
 
-		user.AddAchieve(tt, 5, 1)
+		user.AddAchieve(tt, 5)
 
 		req := achList.convertToUserAchieve(5)
 		req.LastScan = tt
@@ -295,11 +295,61 @@ func TestAddAchieve(t *testing.T) {
 
 		tt := time.Date(2022, time.June, 7, 10, 30, 0, 0, time.Local) //in achieve interval
 
-		user.AddAchieve(tt, 5, 1)
+		user.AddAchieve(tt, 5)
 
 		req := achList.convertToUserAchieve(5)
 		req.LastScan = tt
 
 		require.Equal(t, req, user.Achieves[5])
+	})
+
+	t.Run("full user achieve data check ok", func(t *testing.T) {
+		user := User{
+			Id:       1,
+			UsrLvl:   0,
+			Achieves: map[int]UserAchieve{},
+		}
+
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
+		user.AddAchieve(time.Now(), 3)
+
+		reqFirstAchieve := achList.convertToUserAchieve(3)
+		reqFirstAchieve.Name = "Тестовая многоуровневая ачива простая"
+		reqFirstAchieve.AchieveLvl = 1
+		reqFirstAchieve.ScanCount = 3
+		reqFirstAchieve.LastScan = time.Now()
+
+		require.Equal(t, reqFirstAchieve, user.Achieves[3], "ачивка ID: 3 для начала")
+
+		tt := time.Date(2022, time.June, 7, 10, 30, 0, 0, time.Local) //in achieve interval
+
+		user.AddAchieve(tt, 6)
+		user.AddAchieve(tt, 6)
+
+		reqFirstLvl := UserAchieve{
+			AchieveId:  6,
+			AchieveLvl: 1,
+			ScanCount:  2,
+			Name:       "Тестовая многоуровневая сложная ачива полный сука фарш",
+			LastScan:   tt,
+		}
+
+		require.Equal(t, reqFirstLvl, user.Achieves[6], "ачивка ID: 6 первый уровень")
+
+		user.AddAchieve(tt, 6)
+		user.AddAchieve(tt, 6)
+		user.AddAchieve(tt, 6)
+		user.AddAchieve(tt, 6)
+
+		reqMaxLvl := UserAchieve{
+			AchieveId:  6,
+			AchieveLvl: 3,
+			ScanCount:  6,
+			Name:       "септолете тотал бля",
+			LastScan:   tt,
+		}
+
+		require.Equal(t, reqMaxLvl, user.Achieves[6], "ачивка ID: 6 максимальный уровень")
 	})
 }
