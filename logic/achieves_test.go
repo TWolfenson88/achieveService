@@ -6,6 +6,12 @@ import (
 	"time"
 )
 
+
+//go test -v ./logic
+//go test ./logic -bench=BenchmarkAddAchieve -benchmem
+
+
+
 var checkCondTests = []struct{
 	achieve Achieve
 	usrAchieves map[int]UserAchieve
@@ -351,5 +357,124 @@ func TestAddAchieve(t *testing.T) {
 		}
 
 		require.Equal(t, reqMaxLvl, user.Achieves[6], "ачивка ID: 6 максимальный уровень")
+	})
+}
+
+func TestGetAllLastAchieves(t *testing.T) {
+	t.Run("get first 3 of 10 achieves for 2 users", func(t *testing.T) {
+		user1 := User{
+			Id:       1,
+			UsrLvl:   0,
+			Achieves: map[int]UserAchieve{},
+		}
+		user2 := User{
+			Id:       1,
+			UsrLvl:   0,
+			Achieves: map[int]UserAchieve{},
+		}
+
+		for i := 10; i < 14; i++ {
+			tt := time.Date(2022, time.June, 7, i, 30, 0, 0, time.Local) //in achieve interval
+
+			user1.AddAchieve(tt, i)
+		}
+		for i := 14; i < 21; i++ {
+			tt := time.Date(2022, time.June, 7, i, 30, 0, 0, time.Local) //in achieve interval
+
+			user2.AddAchieve(tt, i)
+		}
+
+		result := GetAllLastAchieves([]User{user2,user1}, 3)
+
+		expArr := []UserAchieve{
+			{
+				AchieveId:  10,
+				AchieveLvl: 1,
+				ScanCount:  1,
+				Name:       "",
+				LastScan:   time.Date(2022, time.June, 7, 10, 30, 0, 0, time.Local),
+			},
+			{
+				AchieveId:  11,
+				AchieveLvl: 1,
+				ScanCount:  1,
+				Name:       "Тестовая одноуровневая ачива простая",
+				LastScan:   time.Date(2022, time.June, 7, 11, 30, 0, 0, time.Local),
+			},
+			{
+				AchieveId:  12,
+				AchieveLvl: 1,
+				ScanCount:  1,
+				Name:       "Тестовая одноуровневая ачива простая",
+				LastScan:   time.Date(2022, time.June, 7, 12, 30, 0, 0, time.Local),
+			},
+		}
+
+		require.Equal(t, expArr, result)
+
+	})
+}
+
+func generateUserArr(count int) []User {
+var	result []User
+
+	for i := 0; i < count; i++ {
+		result = append(result, User{
+			Id:       i,
+			UsrLvl:   0,
+			Achieves: map[int]UserAchieve{},
+		})
+	}
+
+	return result
+}
+
+func BenchmarkAddAchieve(b *testing.B) {
+
+	users := generateUserArr(100)
+	tt:= time.Now()
+
+	b.Run("bench for 100 users with 18 adds", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			for _, user := range users {
+				user.AddAchieve(tt, 3)
+				user.AddAchieve(tt, 3)
+				user.AddAchieve(tt, 3)
+
+				user.AddAchieve(tt, 6)
+				user.AddAchieve(tt, 6)
+				user.AddAchieve(tt, 6)
+				user.AddAchieve(tt, 6)
+				user.AddAchieve(tt, 6)
+				user.AddAchieve(tt, 6)
+
+				user.AddAchieve(tt, 4)
+				user.AddAchieve(tt, 4)
+				user.AddAchieve(tt, 4)
+				user.AddAchieve(tt, 4)
+				user.AddAchieve(tt, 4)
+				user.AddAchieve(tt, 4)
+				user.AddAchieve(tt, 4)
+				user.AddAchieve(tt, 4)
+				user.AddAchieve(tt, 4)
+
+
+			}
+		}
+	})
+
+	usr := User{
+		Id:       1,
+		UsrLvl:   0,
+		Achieves: map[int]UserAchieve{},
+	}
+
+	b.Run("bench for 1 users with 3 scans", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+
+			usr.AddAchieve(time.Now(), 3)
+			usr.AddAchieve(time.Now(), 3)
+			usr.AddAchieve(time.Now(), 3)
+		}
 	})
 }

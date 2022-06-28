@@ -1,6 +1,7 @@
 package main
 
 import (
+	"sort"
 	"time"
 )
 
@@ -103,4 +104,34 @@ func (u *User) AddAchieve(scanTime time.Time, achId int) {
 			u.Achieves[achId] = uAch
 		}
 	}
+}
+
+func (u *User) RemoveAchieve(achId int)  {
+	delete(u.Achieves,achId)
+}
+
+func (u *User) GetAllAchieves() []UserAchieve {
+	var result []UserAchieve
+
+	for _, achieve := range u.Achieves {
+		result = append(result, achieve)
+	}
+
+	return result
+}
+
+func GetAllLastAchieves(users []User, n int) []UserAchieve {
+	var result []UserAchieve
+
+	for _, user := range users {
+		for _, achieve := range user.Achieves {
+			result = append(result, achieve)
+		}
+	}
+
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].LastScan.Before(result[j].LastScan)
+	})
+
+	return result[:n]
 }
