@@ -1,9 +1,9 @@
-package main
+package logic
 
 import "time"
 
 var achList = AchieveList{10: Achieve{
-	Id:               10,
+	IdLoc:            10,
 	MaxLevel:         1,
 	BeginLevel:       1,
 	ScansCountForLvl: nil,
@@ -13,7 +13,7 @@ var achList = AchieveList{10: Achieve{
 	NeedAchieves:     nil,
 },
 	11: Achieve{
-		Id:               11,
+		IdLoc:            11,
 		MaxLevel:         1,
 		BeginLevel:       1,
 		ScansCountForLvl: nil,
@@ -23,7 +23,7 @@ var achList = AchieveList{10: Achieve{
 		NeedAchieves:     nil,
 	},
 	12: Achieve{
-		Id:               12,
+		IdLoc:            12,
 		MaxLevel:         1,
 		BeginLevel:       1,
 		ScansCountForLvl: nil,
@@ -33,7 +33,7 @@ var achList = AchieveList{10: Achieve{
 		NeedAchieves:     nil,
 	},
 	13: Achieve{
-		Id:               13,
+		IdLoc:            13,
 		MaxLevel:         1,
 		BeginLevel:       1,
 		ScansCountForLvl: nil,
@@ -43,7 +43,7 @@ var achList = AchieveList{10: Achieve{
 		NeedAchieves:     nil,
 	},
 	14: Achieve{
-		Id:               14,
+		IdLoc:            14,
 		MaxLevel:         1,
 		BeginLevel:       1,
 		ScansCountForLvl: nil,
@@ -53,7 +53,7 @@ var achList = AchieveList{10: Achieve{
 		NeedAchieves:     nil,
 	},
 	15: Achieve{
-		Id:               15,
+		IdLoc:            15,
 		MaxLevel:         1,
 		BeginLevel:       1,
 		ScansCountForLvl: nil,
@@ -63,7 +63,7 @@ var achList = AchieveList{10: Achieve{
 		NeedAchieves:     nil,
 	},
 	16: Achieve{
-		Id:               16,
+		IdLoc:            16,
 		MaxLevel:         1,
 		BeginLevel:       1,
 		ScansCountForLvl: nil,
@@ -73,7 +73,7 @@ var achList = AchieveList{10: Achieve{
 		NeedAchieves:     nil,
 	},
 	17: Achieve{
-		Id:               17,
+		IdLoc:            17,
 		MaxLevel:         1,
 		BeginLevel:       1,
 		ScansCountForLvl: nil,
@@ -83,7 +83,7 @@ var achList = AchieveList{10: Achieve{
 		NeedAchieves:     nil,
 	},
 	18: Achieve{
-		Id:               18,
+		IdLoc:            18,
 		MaxLevel:         1,
 		BeginLevel:       1,
 		ScansCountForLvl: nil,
@@ -93,7 +93,7 @@ var achList = AchieveList{10: Achieve{
 		NeedAchieves:     nil,
 	},
 	19: Achieve{
-		Id:               19,
+		IdLoc:            19,
 		MaxLevel:         1,
 		BeginLevel:       1,
 		ScansCountForLvl: nil,
@@ -103,7 +103,7 @@ var achList = AchieveList{10: Achieve{
 		NeedAchieves:     nil,
 	},
 	20: Achieve{
-		Id:               20,
+		IdLoc:            20,
 		MaxLevel:         1,
 		BeginLevel:       1,
 		ScansCountForLvl: nil,
@@ -113,7 +113,7 @@ var achList = AchieveList{10: Achieve{
 		NeedAchieves:     nil,
 	},
 	0: Achieve{
-		Id:               0,
+		IdLoc:            0,
 		MaxLevel:         1,
 		BeginLevel:       1,
 		ScansCountForLvl: nil,
@@ -123,7 +123,7 @@ var achList = AchieveList{10: Achieve{
 		NeedAchieves:     nil,
 	},
 	2: Achieve{
-		Id:               2,
+		IdLoc:            2,
 		MaxLevel:         1,
 		BeginLevel:       1,
 		ScansCountForLvl: nil,
@@ -133,7 +133,7 @@ var achList = AchieveList{10: Achieve{
 		NeedAchieves:     nil,
 	},
 	3: Achieve{
-		Id:               3,
+		IdLoc:            3,
 		MaxLevel:         3,
 		BeginLevel:       0,
 		ScansCountForLvl: map[int]int{1: 3, 2: 6, 3: 9},
@@ -143,7 +143,7 @@ var achList = AchieveList{10: Achieve{
 		NeedAchieves:     nil,
 	},
 	4: Achieve{
-		Id:               4,
+		IdLoc:            4,
 		MaxLevel:         3,
 		BeginLevel:       0,
 		ScansCountForLvl: map[int]int{1: 3, 2: 6, 3: 9},
@@ -157,23 +157,23 @@ var achList = AchieveList{10: Achieve{
 		}},
 	},
 	5: Achieve{
-		Id:               5,
+		IdLoc:            5,
 		MaxLevel:         1,
 		BeginLevel:       1,
 		ScansCountForLvl: map[int]int{1: 1},
 		NameForLvl:       map[int]string{1: "Тестовая одноуровневая простая ачива с временем"},
-		PeriodStart:       time.Time{}.Add(10*time.Hour + 10*time.Minute), // from 10:10 AM
-		PeriodEnd:         time.Time{}.Add(20 * time.Hour),                   // to 8:00 PM
+		PeriodStart:      time.Time{}.Add(10*time.Hour + 10*time.Minute), // from 10:10 AM
+		PeriodEnd:        time.Time{}.Add(20 * time.Hour),                   // to 8:00 PM
 		NeedAchieves:     nil,
 	},
 	6: Achieve{
-		Id:               6,
+		IdLoc:            6,
 		MaxLevel:         3,
 		BeginLevel:       0,
 		ScansCountForLvl: map[int]int{1: 2, 2: 4, 3: 6},
 		NameForLvl:       map[int]string{1: "Тестовая многоуровневая сложная ачива полный сука фарш", 2:"промежуточный фарш", 3:"септолете тотал бля"},
-		PeriodStart:       time.Time{}.Add(10*time.Hour + 10*time.Minute), // from 10:10 AM
-		PeriodEnd:         time.Time{}.Add(20 * time.Hour),                   // to 8:00 PM
+		PeriodStart:      time.Time{}.Add(10*time.Hour + 10*time.Minute), // from 10:10 AM
+		PeriodEnd:        time.Time{}.Add(20 * time.Hour),                   // to 8:00 PM
 		NeedAchieves: map[int]AchieveElem{3: {
 			NeedId:    3,
 			Duration:  0,

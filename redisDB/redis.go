@@ -52,8 +52,8 @@ func InitClient() Mainerrr {
 		Addr:    "192.168.10.205:6379",
 		Password: "", // no password set
 		DB:      0,  // use default DB
-		DialTimeout: 1*time.Hour,
-		ReadTimeout: 1*time.Hour, //TODO: понять хуй ли он стрим дропает через 5-10сек
+		DialTimeout: -1,
+		ReadTimeout: -1, //TODO: понять хуй ли он стрим дропает через 5-10сек
 	})
 
 	return Rdb{Client: rdb}

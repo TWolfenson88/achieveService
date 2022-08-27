@@ -1,4 +1,4 @@
-package main
+package logic
 
 import (
 	"github.com/stretchr/testify/require"
@@ -19,7 +19,7 @@ var checkCondTests = []struct{
 	msg         string
 }{
 	{achieve: Achieve{
-		Id:               0,
+		IdLoc:            0,
 		MaxLevel:         0,
 		BeginLevel:       0,
 		ScansCountForLvl: nil,
@@ -35,7 +35,7 @@ var checkCondTests = []struct{
 		LastScan:   time.Time{},
 	}}, exp: true, msg: "empty needed achieves"},
 	{achieve: Achieve{
-		Id:               0,
+		IdLoc:            0,
 		MaxLevel:         0,
 		BeginLevel:       0,
 		ScansCountForLvl: nil,
@@ -55,7 +55,7 @@ var checkCondTests = []struct{
 		LastScan:   time.Now().Add(-10*time.Minute),
 	}}, exp: true, msg: "all conditions ok"},
 	{achieve: Achieve{
-		Id:               0,
+		IdLoc:            0,
 		MaxLevel:         0,
 		BeginLevel:       0,
 		ScansCountForLvl: nil,
@@ -75,7 +75,7 @@ var checkCondTests = []struct{
 		LastScan:   time.Now().Add(-10*time.Minute),
 	}}, exp: true, msg: "all conditions ok and duration zero"},
 	{achieve: Achieve{
-		Id:               0,
+		IdLoc:            0,
 		MaxLevel:         0,
 		BeginLevel:       0,
 		ScansCountForLvl: nil,
@@ -95,7 +95,7 @@ var checkCondTests = []struct{
 		LastScan:   time.Now().Add(-20*time.Minute),
 	}}, exp: false, msg: "too late scan"},
 	{achieve: Achieve{
-		Id:               0,
+		IdLoc:            0,
 		MaxLevel:         0,
 		BeginLevel:       0,
 		ScansCountForLvl: nil,
@@ -115,7 +115,7 @@ var checkCondTests = []struct{
 		LastScan:   time.Now().Add(-10*time.Minute),
 	}}, exp: false, msg: "not enough scan count"},
 	{achieve: Achieve{
-		Id:               0,
+		IdLoc:            0,
 		MaxLevel:         0,
 		BeginLevel:       0,
 		ScansCountForLvl: nil,
@@ -175,9 +175,9 @@ func TestIsScanInInterval(t *testing.T) {
 func TestAddAchieve(t *testing.T) {
 	t.Run("add one simple achieve", func(t *testing.T) {
 		user := User{
-			Id:       1,
-			UsrLvl:   0,
-			Achieves: map[int]UserAchieve{},
+			Id:           1,
+			UsrLvl:       0,
+			TempAchieves: map[int]UserAchieve{},
 		}
 
 		user.AddAchieve(time.Now(), 2)
@@ -185,13 +185,13 @@ func TestAddAchieve(t *testing.T) {
 		req := achList.convertToUserAchieve(2)
 		req.LastScan = time.Now()
 
-		require.Equal(t, req, user.Achieves[2])
+		require.Equal(t, req, user.TempAchieves[2])
 	})
 	t.Run("add second level for multilevel achieve", func(t *testing.T) {
 		user := User{
-			Id:       1,
-			UsrLvl:   0,
-			Achieves: map[int]UserAchieve{},
+			Id:           1,
+			UsrLvl:       0,
+			TempAchieves: map[int]UserAchieve{},
 		}
 
 		user.AddAchieve(time.Now(), 3)
@@ -204,13 +204,13 @@ func TestAddAchieve(t *testing.T) {
 
 		req := 2
 
-		require.Equal(t, req, user.Achieves[3].AchieveLvl)
+		require.Equal(t, req, user.TempAchieves[3].AchieveLvl)
 	})
 	t.Run("add max level for multilevel achieve", func(t *testing.T) {
 		user := User{
-			Id:       1,
-			UsrLvl:   0,
-			Achieves: map[int]UserAchieve{},
+			Id:           1,
+			UsrLvl:       0,
+			TempAchieves: map[int]UserAchieve{},
 		}
 
 		user.AddAchieve(time.Now(), 3)
@@ -227,13 +227,13 @@ func TestAddAchieve(t *testing.T) {
 
 		req := 3
 
-		require.Equal(t, req, user.Achieves[3].AchieveLvl)
+		require.Equal(t, req, user.TempAchieves[3].AchieveLvl)
 	})
 	t.Run("add first level for multilevel complex achieve", func(t *testing.T) {
 		user := User{
-			Id:       1,
-			UsrLvl:   0,
-			Achieves: map[int]UserAchieve{},
+			Id:           1,
+			UsrLvl:       0,
+			TempAchieves: map[int]UserAchieve{},
 		}
 
 		user.AddAchieve(time.Now(), 3)
@@ -246,13 +246,13 @@ func TestAddAchieve(t *testing.T) {
 
 		req := 1
 
-		require.Equal(t, req, user.Achieves[4].AchieveLvl)
+		require.Equal(t, req, user.TempAchieves[4].AchieveLvl)
 	})
 	t.Run("add max level for multilevel complex achieve", func(t *testing.T) {
 		user := User{
-			Id:       1,
-			UsrLvl:   0,
-			Achieves: map[int]UserAchieve{},
+			Id:           1,
+			UsrLvl:       0,
+			TempAchieves: map[int]UserAchieve{},
 		}
 
 		user.AddAchieve(time.Now(), 3)
@@ -273,13 +273,13 @@ func TestAddAchieve(t *testing.T) {
 
 		req := 3
 
-		require.Equal(t, req, user.Achieves[4].AchieveLvl)
+		require.Equal(t, req, user.TempAchieves[4].AchieveLvl)
 	})
 	t.Run("check time of added achieve", func(t *testing.T) {
 		user := User{
-			Id:       1,
-			UsrLvl:   0,
-			Achieves: map[int]UserAchieve{},
+			Id:           1,
+			UsrLvl:       0,
+			TempAchieves: map[int]UserAchieve{},
 		}
 
 		tt := time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local) //not in achieve interval
@@ -289,14 +289,14 @@ func TestAddAchieve(t *testing.T) {
 		req := achList.convertToUserAchieve(5)
 		req.LastScan = tt
 
-		require.NotEqual(t, req, user.Achieves[5])
+		require.NotEqual(t, req, user.TempAchieves[5])
 	})
 
 	t.Run("check time in interval", func(t *testing.T) {
 		user := User{
-			Id:       1,
-			UsrLvl:   0,
-			Achieves: map[int]UserAchieve{},
+			Id:           1,
+			UsrLvl:       0,
+			TempAchieves: map[int]UserAchieve{},
 		}
 
 		tt := time.Date(2022, time.June, 7, 10, 30, 0, 0, time.Local) //in achieve interval
@@ -306,14 +306,14 @@ func TestAddAchieve(t *testing.T) {
 		req := achList.convertToUserAchieve(5)
 		req.LastScan = tt
 
-		require.Equal(t, req, user.Achieves[5])
+		require.Equal(t, req, user.TempAchieves[5])
 	})
 
 	t.Run("full user achieve data check ok", func(t *testing.T) {
 		user := User{
-			Id:       1,
-			UsrLvl:   0,
-			Achieves: map[int]UserAchieve{},
+			Id:           1,
+			UsrLvl:       0,
+			TempAchieves: map[int]UserAchieve{},
 		}
 
 		user.AddAchieve(time.Now(), 3)
@@ -326,7 +326,7 @@ func TestAddAchieve(t *testing.T) {
 		reqFirstAchieve.ScanCount = 3
 		reqFirstAchieve.LastScan = time.Now()
 
-		require.Equal(t, reqFirstAchieve, user.Achieves[3], "ачивка ID: 3 для начала")
+		require.Equal(t, reqFirstAchieve, user.TempAchieves[3], "ачивка ID: 3 для начала")
 
 		tt := time.Date(2022, time.June, 7, 10, 30, 0, 0, time.Local) //in achieve interval
 
@@ -341,7 +341,7 @@ func TestAddAchieve(t *testing.T) {
 			LastScan:   tt,
 		}
 
-		require.Equal(t, reqFirstLvl, user.Achieves[6], "ачивка ID: 6 первый уровень")
+		require.Equal(t, reqFirstLvl, user.TempAchieves[6], "ачивка ID: 6 первый уровень")
 
 		user.AddAchieve(tt, 6)
 		user.AddAchieve(tt, 6)
@@ -356,21 +356,21 @@ func TestAddAchieve(t *testing.T) {
 			LastScan:   tt,
 		}
 
-		require.Equal(t, reqMaxLvl, user.Achieves[6], "ачивка ID: 6 максимальный уровень")
+		require.Equal(t, reqMaxLvl, user.TempAchieves[6], "ачивка ID: 6 максимальный уровень")
 	})
 }
 
 func TestGetAllLastAchieves(t *testing.T) {
 	t.Run("get first 3 of 10 achieves for 2 users", func(t *testing.T) {
 		user1 := User{
-			Id:       1,
-			UsrLvl:   0,
-			Achieves: map[int]UserAchieve{},
+			Id:           1,
+			UsrLvl:       0,
+			TempAchieves: map[int]UserAchieve{},
 		}
 		user2 := User{
-			Id:       1,
-			UsrLvl:   0,
-			Achieves: map[int]UserAchieve{},
+			Id:           1,
+			UsrLvl:       0,
+			TempAchieves: map[int]UserAchieve{},
 		}
 
 		for i := 10; i < 14; i++ {
@@ -420,9 +420,9 @@ var	result []User
 
 	for i := 0; i < count; i++ {
 		result = append(result, User{
-			Id:       i,
-			UsrLvl:   0,
-			Achieves: map[int]UserAchieve{},
+			Id:           i,
+			UsrLvl:       0,
+			TempAchieves: map[int]UserAchieve{},
 		})
 	}
 
@@ -464,9 +464,9 @@ func BenchmarkAddAchieve(b *testing.B) {
 	})
 
 	usr := User{
-		Id:       1,
-		UsrLvl:   0,
-		Achieves: map[int]UserAchieve{},
+		Id:           1,
+		UsrLvl:       0,
+		TempAchieves: map[int]UserAchieve{},
 	}
 
 	b.Run("bench for 1 users with 3 scans", func(b *testing.B) {
