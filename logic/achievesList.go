@@ -2,6 +2,36 @@ package logic
 
 import "time"
 
+var achList = AchieveList{10: []Achieve{{  //Массив ачив для 10й локации
+	Id:               1,
+	IdLoc:            10,
+	MaxLevel:         1,
+	BeginLevel:       1,
+	ScansCountForLvl: nil,
+	NameForLvl:       map[int]string{1: "Тестовая одноуровневая ачива простая"},
+	PeriodStart:      time.Time{},
+	PeriodEnd:        time.Time{},
+	Cooldown:         0,
+	NeedAchieves:     nil,
+	NeedLocations:    nil,
+},
+	{
+		Id:               2,
+		IdLoc:            10,
+		MaxLevel:         1,
+		BeginLevel:       1,
+		ScansCountForLvl: nil,
+		NameForLvl:       map[int]string{1: "Тестовая одноуровневая ачива на несколько локаций"},
+		PeriodStart:      time.Time{},
+		PeriodEnd:        time.Time{},
+		Cooldown:         0,
+		NeedAchieves:     nil,
+		NeedLocations:    []int{10,20,30},
+	},
+},
+}
+
+/*
 var achList = AchieveList{10: Achieve{
 	IdLoc:            10,
 	MaxLevel:         1,
@@ -181,3 +211,4 @@ var achList = AchieveList{10: Achieve{
 		}},
 	},
 }
+*/

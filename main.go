@@ -11,6 +11,6 @@ func main()  {
 
 	client := redisDB.InitClient()
 
-	client.StreamListner()
+	//client.StreamListner()
 
 }
