@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"sort"
+	"fmt"
 	"time"
 )
 
@@ -14,9 +14,10 @@ type Achieve struct {
 	NameForLvl       map[int]string
 	PeriodStart      time.Time
 	PeriodEnd        time.Time
-	Cooldown		 time.Duration
+	Cooldown         time.Duration
 	NeedAchieves     map[int]AchieveElem
 	NeedLocations    []int
+	SpecialLogic     func(usr *User) bool
 }
 
 type AchieveElem struct {
@@ -43,73 +44,140 @@ type User struct {
 	CurrentAchieves map[int]*UserAchieve
 }
 
+func checkCooldown(lastScan, scanTime time.Time) bool {
+	return scanTime.Sub(lastScan) < (5 * time.Minute)
+}
+
 func (a *Achieve) checkConditions(usr *User, scanTime time.Time) bool {
 
-	if scanTime.Sub(usr.CurrentAchieves[a.Id].LastScan) < (5 * time.Minute){
-		usr.CurrentAchieves[a.Id].LastScan = scanTime
-		return false
+	fmt.Println("rere", usr)
+
+	ach, ok := usr.CurrentAchieves[a.Id]
+	if !ok {
+		ach = &UserAchieve{
+			AchieveId:        0,
+			AchieveLvl:       0,
+			ScanCount:        0,
+			Name:             "",
+			LastScan:         time.Time{},
+			ScannedLocations: nil,
+		}
 	}
 
-	if a.NeedAchieves == nil && a.NeedLocations == nil && usr.haveAchieve(a.Id){
+	if a.NeedLocations == nil && a.NeedAchieves == nil && checkCooldown(ach.LastScan, scanTime) {
 		return true
-	} else if a.NeedAchieves == nil && a.NeedLocations == nil && !usr.haveAchieve(a.Id){
-		uAch := convertToUserAchieve(*a)
-		uAch.LastScan = scanTime
-		uAch.ScanCount = 1
-		usr.CurrentAchieves[a.Id] = &uAch
-
-		return true
-	}
-
-	if a.NeedLocations == nil && a.NeedAchieves != nil {
+	} else if a.SpecialLogic == nil && a.NeedAchieves != nil && checkCooldown(ach.LastScan, scanTime) {
 		for _, elem := range a.NeedAchieves {
 			if uAch, ok := usr.CurrentAchieves[elem.NeedId]; !ok {
 				return false
 			} else if (time.Now().Sub(uAch.LastScan) > elem.Duration && elem.Duration != 0) || elem.NeedCount > uAch.ScanCount {
 				return false
+			} else {
+				return true
+			}
+		}
+	} else if a.SpecialLogic != nil && a.NeedAchieves == nil && checkCooldown(ach.LastScan, scanTime) {
+		return a.SpecialLogic(usr)
+	} else if a.SpecialLogic != nil && a.NeedAchieves != nil && checkCooldown(ach.LastScan, scanTime) {
+		for _, elem := range a.NeedAchieves {
+			if uAch, ok := usr.CurrentAchieves[elem.NeedId]; !ok {
+				return false
+			} else if (time.Now().Sub(uAch.LastScan) > elem.Duration && elem.Duration != 0) || elem.NeedCount > uAch.ScanCount {
+				return false
+			} else {
+				return a.SpecialLogic(usr)
+			}
+		}
+	}
+
+	/*	if a.NeedAchieves != nil {
+
+			for _, elem := range a.NeedAchieves {
+				if uAch, ok := usr.CurrentAchieves[elem.NeedId]; !ok {
+					return false
+				} else if (time.Now().Sub(uAch.LastScan) > elem.Duration && elem.Duration != 0) || elem.NeedCount > uAch.ScanCount {
+					return false
+				}
 			}
 		}
 
-		return true
+		if a.SpecialLogic != nil {
+			return a.SpecialLogic(usr)
+		}*/
 
-	}
+	/*	if usr.haveAchieves() && scanTime.Sub(usr.CurrentAchieves[a.Id].LastScan) < (5 * time.Minute){
+			usr.CurrentAchieves[a.Id].LastScan = scanTime
+			return false
+		}
 
-	if a.NeedLocations != nil {
-		tempAch, ok := usr.TempAchieves[a.Id]
-		if !ok {
+		fmt.Println("rere")
+
+		if a.NeedAchieves == nil && a.NeedLocations == nil && usr.haveAchieve(a.Id){
+			return true
+		} else if a.NeedAchieves == nil && a.NeedLocations == nil && !usr.haveAchieve(a.Id){
 			uAch := convertToUserAchieve(*a)
 			uAch.LastScan = scanTime
 			uAch.ScanCount = 1
-			uAch.ScannedLocations = append(uAch.ScannedLocations, a.IdLoc)
-			usr.TempAchieves[a.Id] = &uAch
+			usr.CurrentAchieves[a.Id] = &uAch
+
 			return true
-		} else if tempAch.ScannedLocations[len(tempAch.ScannedLocations)-1] != a.NeedLocations[len(tempAch.ScannedLocations)-1]{
-			delete(usr.TempAchieves, a.Id)
-			return false
 		}
-	}
+
+		fmt.Println("rere")
+
+		if a.NeedLocations == nil && a.NeedAchieves != nil {
+			for _, elem := range a.NeedAchieves {
+				if uAch, ok := usr.CurrentAchieves[elem.NeedId]; !ok {
+					return false
+				} else if (time.Now().Sub(uAch.LastScan) > elem.Duration && elem.Duration != 0) || elem.NeedCount > uAch.ScanCount {
+					return false
+				}
+			}
+
+			return true
+
+		}
+
+		fmt.Println("rere")
+
+		if a.NeedLocations != nil {
+			tempAch, ok := usr.TempAchieves[a.Id]
+			if !ok {
+				uAch := convertToUserAchieve(*a)
+				uAch.LastScan = scanTime
+				uAch.ScanCount = 1
+				uAch.ScannedLocations = append(uAch.ScannedLocations, a.IdLoc)
+				usr.TempAchieves[a.Id] = &uAch
+				return true
+			} else if tempAch.ScannedLocations[len(tempAch.ScannedLocations)-1] != a.NeedLocations[len(tempAch.ScannedLocations)-1]{
+				delete(usr.TempAchieves, a.Id)
+				return false
+			}
+		}
+
+		fmt.Println("rere")*/
 
 	return true
 
-/*
-	if a.NeedAchieves == nil {
+	/*
+		if a.NeedAchieves == nil {
+			return true
+		}
+
+		for _, elem := range a.NeedAchieves {
+			if uAch, ok := usrAchs[elem.NeedId]; !ok {
+				return false
+			} else if (time.Now().Sub(uAch.LastScan) > elem.Duration && elem.Duration != 0) || elem.NeedCount > uAch.ScanCount {
+				return false
+			}
+		}
 		return true
-	}
-
-	for _, elem := range a.NeedAchieves {
-		if uAch, ok := usrAchs[elem.NeedId]; !ok {
-			return false
-		} else if (time.Now().Sub(uAch.LastScan) > elem.Duration && elem.Duration != 0) || elem.NeedCount > uAch.ScanCount {
-			return false
-		}
-	}
-	return true
 	*/
 }
 
 func convertToUserAchieve(ach Achieve) UserAchieve {
 	return UserAchieve{
-		AchieveId:  ach.IdLoc,
+		AchieveId:  ach.Id,
 		AchieveLvl: ach.BeginLevel,
 		ScanCount:  1,
 		Name:       ach.NameForLvl[ach.BeginLevel],
@@ -120,6 +188,14 @@ func convertToUserAchieve(ach Achieve) UserAchieve {
 func (u *User) haveAchieve(achId int) bool {
 	_, ok := u.CurrentAchieves[achId]
 	return ok
+}
+
+func (u *User) haveAchieves() bool {
+	if len(u.CurrentAchieves) != 0 {
+		return true
+	}
+
+	return false
 }
 
 func isScanInInterval(a Achieve, t time.Time) bool {
@@ -142,25 +218,32 @@ func (u *User) AddAchieve(scanTime time.Time, locId int) {
 	//Получаем и фильтруем все ачивки по локации и по времени скана
 	achieves := achList[locId]
 
+	fmt.Println("ach arr len ", len(achieves))
+
 	for _, achieve := range achieves {
+		fmt.Println("re", achieve.Id)
 		if isScanInInterval(achieve, scanTime) && achieve.checkConditions(u, scanTime) {
-			uAch := u.TempAchieves[locId]
-			uAch.ScanCount++
-			u.TempAchieves[locId] = uAch
-			if uAch.AchieveLvl == achieve.MaxLevel || achieve.ScansCountForLvl[uAch.AchieveLvl+1] < uAch.ScanCount {
-				return
-			}else if achieve.ScansCountForLvl[uAch.AchieveLvl+1] == uAch.ScanCount{
-				uAch.Name = achieve.NameForLvl[uAch.AchieveLvl+1]
-				uAch.AchieveLvl++
-				u.TempAchieves[locId] = uAch
+			fmt.Println("KEKE")
+			uAch := convertToUserAchieve(achieve)
+
+			tempUsrAch, ok := u.TempAchieves[uAch.AchieveId]
+			if ok && tempUsrAch.ScanCount+1 == achieve.ScansCountForLvl[tempUsrAch.AchieveLvl+1] {
+				tempUsrAch.Name = achieve.NameForLvl[tempUsrAch.AchieveLvl+1]
+				tempUsrAch.ScanCount++
+				tempUsrAch.AchieveLvl++
+				u.CurrentAchieves[tempUsrAch.AchieveId] = tempUsrAch
+			} else if ok {
+				tempUsrAch.ScanCount++
+			} else {
+				if uAch.AchieveLvl > 0 {
+					u.CurrentAchieves[uAch.AchieveId] = &uAch
+				} else {
+					u.TempAchieves[uAch.AchieveId] = &uAch
+				}
 			}
+
 		}
 	}
-
-
-
-
-
 
 	/*
 		if !u.haveAchieve(locId) && isScanInInterval(achList[locId], scanTime){
@@ -188,7 +271,7 @@ func (u *User) RemoveAchieve(achId int) {
 	delete(u.TempAchieves, achId)
 }
 
-func (u *User) GetAllAchieves() []UserAchieve {
+/*func (u *User) GetAllAchieves() []UserAchieve {
 	var result []UserAchieve
 
 	for _, achieve := range u.TempAchieves {
@@ -213,3 +296,4 @@ func GetAllLastAchieves(users []User, n int) []UserAchieve {
 
 	return result[:n]
 }
+*/

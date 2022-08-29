@@ -2,7 +2,7 @@ package logic
 
 import "time"
 
-var achList = AchieveList{10: []Achieve{{  //Массив ачив для 10й локации
+var achList = AchieveList{10: []Achieve{{ //Массив ачив для 10й локации
 	Id:               1,
 	IdLoc:            10,
 	MaxLevel:         1,
@@ -26,9 +26,44 @@ var achList = AchieveList{10: []Achieve{{  //Массив ачив для 10й �
 		PeriodEnd:        time.Time{},
 		Cooldown:         0,
 		NeedAchieves:     nil,
-		NeedLocations:    []int{10,20,30},
+		NeedLocations:    []int{10, 20, 30},
+	},
+	{
+		Id:               3,
+		IdLoc:            10,
+		MaxLevel:         1,
+		BeginLevel:       1,
+		ScansCountForLvl: nil,
+		NameForLvl:       map[int]string{1: "Тестовая ачива с спецусловием"},
+		PeriodStart:      time.Time{},
+		PeriodEnd:        time.Time{},
+		Cooldown:         0,
+		NeedAchieves:     nil,
+		NeedLocations:    nil,
+		SpecialLogic: func(usr *User) bool {
+			if len(usr.CurrentAchieves) == 0 {
+				return true
+			}
+			return false
+		},
 	},
 },
+	11: []Achieve{
+		{
+			Id:               21,
+			IdLoc:            11,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: map[int]int{1: 2, 2: 4},
+			NameForLvl:       nil,
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic:     nil,
+		},
+	},
 }
 
 /*
