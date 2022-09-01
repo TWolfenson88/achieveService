@@ -17,7 +17,7 @@ type Achieve struct {
 	Cooldown         time.Duration
 	NeedAchieves     map[int]AchieveElem
 	NeedLocations    []int
-	SpecialLogic     func(usr *User) bool
+	SpecialLogic     func(usr *User, ach *Achieve) bool
 }
 
 type AchieveElem struct {
@@ -45,6 +45,9 @@ type User struct {
 }
 
 func checkCooldown(lastScan, scanTime time.Time) bool {
+	//fmt.Println("CHECK COOLDWON", scanTime)
+	//fmt.Println("CHECK COOLDWON", lastScan)
+	//fmt.Println("CHECK COOLDWON", scanTime.Sub(lastScan))
 	return scanTime.Sub(lastScan) < (5 * time.Minute)
 }
 
@@ -59,33 +62,41 @@ func (a *Achieve) checkConditions(usr *User, scanTime time.Time) bool {
 			AchieveLvl:       0,
 			ScanCount:        0,
 			Name:             "",
-			LastScan:         time.Time{},
+			LastScan:         scanTime,
 			ScannedLocations: nil,
 		}
 	}
 
-	if a.NeedLocations == nil && a.NeedAchieves == nil && checkCooldown(ach.LastScan, scanTime) {
+	fmt.Println("фчива^ \n", a)
+
+	if a.SpecialLogic == nil && a.NeedAchieves == nil && checkCooldown(ach.LastScan, scanTime) {
+		fmt.Println("очень просто ")
 		return true
 	} else if a.SpecialLogic == nil && a.NeedAchieves != nil && checkCooldown(ach.LastScan, scanTime) {
+		fmt.Println("чуть сложнее")
 		for _, elem := range a.NeedAchieves {
 			if uAch, ok := usr.CurrentAchieves[elem.NeedId]; !ok {
 				return false
 			} else if (time.Now().Sub(uAch.LastScan) > elem.Duration && elem.Duration != 0) || elem.NeedCount > uAch.ScanCount {
 				return false
 			} else {
+				fmt.Println("чуть сложнее2")
 				return true
 			}
 		}
 	} else if a.SpecialLogic != nil && a.NeedAchieves == nil && checkCooldown(ach.LastScan, scanTime) {
-		return a.SpecialLogic(usr)
+		fmt.Println("спешщл логик")
+		return a.SpecialLogic(usr, a)
 	} else if a.SpecialLogic != nil && a.NeedAchieves != nil && checkCooldown(ach.LastScan, scanTime) {
+		fmt.Println("довольно сложно")
 		for _, elem := range a.NeedAchieves {
 			if uAch, ok := usr.CurrentAchieves[elem.NeedId]; !ok {
 				return false
 			} else if (time.Now().Sub(uAch.LastScan) > elem.Duration && elem.Duration != 0) || elem.NeedCount > uAch.ScanCount {
 				return false
 			} else {
-				return a.SpecialLogic(usr)
+				fmt.Println("спешщл логик")
+				return a.SpecialLogic(usr, a)
 			}
 		}
 	}
@@ -157,7 +168,7 @@ func (a *Achieve) checkConditions(usr *User, scanTime time.Time) bool {
 
 		fmt.Println("rere")*/
 
-	return true
+	return false
 
 	/*
 		if a.NeedAchieves == nil {
@@ -228,14 +239,19 @@ func (u *User) AddAchieve(scanTime time.Time, locId int) {
 
 			tempUsrAch, ok := u.TempAchieves[uAch.AchieveId]
 			if ok && tempUsrAch.ScanCount+1 == achieve.ScansCountForLvl[tempUsrAch.AchieveLvl+1] {
+				fmt.Println("HERE ")
 				tempUsrAch.Name = achieve.NameForLvl[tempUsrAch.AchieveLvl+1]
 				tempUsrAch.ScanCount++
 				tempUsrAch.AchieveLvl++
 				u.CurrentAchieves[tempUsrAch.AchieveId] = tempUsrAch
-			} else if ok {
+			} else if ok && achieve.ScansCountForLvl != nil {
+				fmt.Println("TEMP PLUSPLUS ")
 				tempUsrAch.ScanCount++
 			} else {
+				fmt.Println("ELSE")
 				if uAch.AchieveLvl > 0 {
+					fmt.Println("CURRENT ")
+					fmt.Println("ACHIEVE: ", uAch, "\n", "USER: ", u.CurrentAchieves)
 					u.CurrentAchieves[uAch.AchieveId] = &uAch
 				} else {
 					u.TempAchieves[uAch.AchieveId] = &uAch

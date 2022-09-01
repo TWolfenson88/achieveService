@@ -1,6 +1,37 @@
 package logic
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
+
+func recoverFromNil() {
+	if r := recover(); r != nil {
+		fmt.Println("Recovered", r)
+	}
+}
+
+func someTestLogic(usr *User, ach *Achieve) bool {
+	defer recoverFromNil()
+	fmt.Println("ALLO")
+	if uAch, ok := usr.TempAchieves[ach.Id]; ok {
+		for i, id := range ach.NeedLocations {
+			fmt.Println("id: ", id, "  |||  another id: ", uAch.ScannedLocations[i])
+			if id != uAch.ScannedLocations[i] {
+				return false
+			}
+		}
+		fmt.Println("***** RETURNED TRUE ")
+		return true
+	} else {
+		fmt.Println("WROTTEN")
+		uAch := convertToUserAchieve(*ach)
+		uAch.ScannedLocations = append(uAch.ScannedLocations, ach.IdLoc)
+		usr.TempAchieves[uAch.AchieveId] = &uAch
+	}
+
+	return false
+}
 
 var achList = AchieveList{10: []Achieve{{ //Массив ачив для 10й локации
 	Id:               1,
@@ -27,6 +58,7 @@ var achList = AchieveList{10: []Achieve{{ //Массив ачив для 10й л
 		Cooldown:         0,
 		NeedAchieves:     nil,
 		NeedLocations:    []int{10, 20, 30},
+		SpecialLogic:     someTestLogic,
 	},
 	{
 		Id:               3,
@@ -40,7 +72,7 @@ var achList = AchieveList{10: []Achieve{{ //Массив ачив для 10й л
 		Cooldown:         0,
 		NeedAchieves:     nil,
 		NeedLocations:    nil,
-		SpecialLogic: func(usr *User) bool {
+		SpecialLogic: func(usr *User, ach *Achieve) bool {
 			if len(usr.CurrentAchieves) == 0 {
 				return true
 			}
@@ -50,7 +82,7 @@ var achList = AchieveList{10: []Achieve{{ //Массив ачив для 10й л
 },
 	11: []Achieve{
 		{
-			Id:               21,
+			Id:               32,
 			IdLoc:            11,
 			MaxLevel:         1,
 			BeginLevel:       0,
@@ -62,6 +94,52 @@ var achList = AchieveList{10: []Achieve{{ //Массив ачив для 10й л
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
 			SpecialLogic:     nil,
+		},
+	},
+	20: []Achieve{
+		{
+			Id:               33,
+			IdLoc:            20,
+			MaxLevel:         1,
+			BeginLevel:       1,
+			ScansCountForLvl: nil,
+			NameForLvl:       nil,
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve) bool {
+				fmt.Println("chck20 ")
+				if achach, ok := usr.TempAchieves[2]; ok {
+					fmt.Println("chck20 ")
+					achach.ScannedLocations = append(achach.ScannedLocations, 20)
+				}
+				return true
+			},
+		},
+	},
+	30: []Achieve{
+		{
+			Id:               34,
+			IdLoc:            30,
+			MaxLevel:         1,
+			BeginLevel:       1,
+			ScansCountForLvl: nil,
+			NameForLvl:       nil,
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve) bool {
+				fmt.Println("chck30 ")
+				if achach, ok := usr.TempAchieves[2]; ok {
+					fmt.Println("chck30 ")
+					achach.ScannedLocations = append(achach.ScannedLocations, 30)
+				}
+				return true
+			},
 		},
 	},
 }

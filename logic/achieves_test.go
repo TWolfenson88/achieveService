@@ -23,12 +23,21 @@ func TestUser_AddAchieve(t *testing.T) {
 
 		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 10)
 
-		fmt.Println(usr.CurrentAchieves, usr.TempAchieves[10])
+		fmt.Println(usr.TempAchieves[2], "NOOT NEELLLLLLLLLLLLL")
+
+		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 20)
+		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 30)
+		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 10)
+
+		fmt.Println("FINISH! ________")
+
+		fmt.Println(usr.CurrentAchieves, usr.TempAchieves, "это не нил")
 
 		require.NotNil(t, usr.CurrentAchieves)
 	})
 
 	t.Run("Check lvl increase", func(t *testing.T) {
+		t.Skip()
 		fmt.Println("test print 0 :", usr.CurrentAchieves[21], usr.TempAchieves[21])
 		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 11)
 		fmt.Println("test print 1 :", usr.CurrentAchieves[21], usr.TempAchieves[21])
