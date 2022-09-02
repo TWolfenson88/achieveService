@@ -1,6 +1,7 @@
 package main
 
 import (
+	"awesomeProject5/db"
 	"awesomeProject5/logic"
 	"awesomeProject5/redisDB"
 	"fmt"
@@ -12,11 +13,15 @@ func main() {
 
 	fmt.Println("Working...")
 
+	conn := db.InitDB()
+
+	//conn.SaveUserData(logic.User{})
+
 	users := map[int]*logic.User{}
 
 	client := redisDB.InitRedis()
 
-	go redisDB.StreamListener(client, users)
+	go redisDB.StreamListener(client, users, conn)
 
 	http.HandleFunc("/testHandle", func(writer http.ResponseWriter, request *http.Request) {
 		fmt.Println("USERS LIST: ", users[1010], '\n', users[1020])
@@ -28,6 +33,5 @@ func main() {
 	if err != nil {
 		log.Fatalln("SOSI!@", err)
 	}
-	//client.StreamListner()
 
 }
