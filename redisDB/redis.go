@@ -7,31 +7,39 @@ import (
 	"fmt"
 	"github.com/go-redis/redis/v9"
 	"log"
+	"os"
 	"strconv"
 	"time"
 )
 
+func getEnv(key string, defaultVal string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		return value
+	}
+	return defaultVal
+}
+
 func InitRedis() *redis.Client {
 	var (
-		//host     = getEnv("REDIS_HOST", "localhost")
-		//port     = string(getEnv("REDIS_PORT", "6379"))
-		//password = getEnv("REDIS_PASSWORD", "")
-		host = "192.168.10.205"
-		port = "6379"
+		host     = getEnv("REDIS_HOST", "localhost")
+		port     = getEnv("REDIS_PORT", "6379")
+		password = getEnv("REDIS_PASSWORD", "")
 	)
 
 	client := redis.NewClient(&redis.Options{
 		Addr:        host + ":" + port,
-		Password:    "",
+		Password:    password,
 		DB:          0,
 		DialTimeout: 500 * time.Second,
 		ReadTimeout: -1,
 	})
 
-	_, err := client.Ping(context.Background()).Result()
+	reslt, err := client.Ping(context.Background()).Result()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("PING ERR", err)
 	}
+
+	log.Println("PING SUCESS ", reslt)
 
 	return client
 }
@@ -42,17 +50,17 @@ type Respons struct {
 	Timestamp time.Time
 }
 
-func StreamListener(rc *redis.Client, users map[int]*logic.User, pg db.Saver) {
+func StreamListener(rc *redis.Client, users map[int]*logic.User, pg db.Saver, logCh chan string) {
 	ctx := context.Background()
 	lastId, err := rc.Get(ctx, "LastID").Result()
 	if err != nil {
-		log.Fatalln("ERR! ", err)
+		log.Fatalln("GET ERR! ", err) //TODO: обработать момент если в ключе пусто
 	}
 	fmt.Println("LASTID: ", lastId)
 	//read stream after last worked id
 	prevStream, err := rc.XRange(ctx, "TestStream", lastId, "+").Result()
 	if err != nil {
-		log.Fatalln("ERR! ", err)
+		log.Fatalln("XRANGE ERR! ", err)
 	}
 	for _, message := range prevStream {
 		fmt.Println("Stream", message.ID)
@@ -108,13 +116,13 @@ func StreamListener(rc *redis.Client, users map[int]*logic.User, pg db.Saver) {
 						CurrentAchieves: map[int]*logic.UserAchieve{},
 					}
 
-					usr.AddAchieve(rsp.Timestamp, rsp.Location)
+					usr.AddAchieve(rsp.Timestamp, rsp.Location, logCh)
 
 					pg.SaveUserData(*usr)
 
 					users[userId] = usr
 				} else {
-					userr.AddAchieve(rsp.Timestamp, rsp.Location)
+					userr.AddAchieve(rsp.Timestamp, rsp.Location, logCh)
 
 					pg.SaveUserData(*userr)
 				}

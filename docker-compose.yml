@@ -1,0 +1,39 @@
+version: "3"
+services:
+  achieve_service:
+    restart: always
+    build: .
+    expose:
+      - "7990"
+    links:
+      - achievedb:achievedb
+      - redis:redis
+    environment:
+      REDIS_HOST: 'redis'
+      REDIS_PORT: '6379'
+
+      POSTGRES_HOST: 'achievedb'
+      POSTGRES_PORT: '5432'
+      POSTGRES_USER: 'AchUser'
+      POSTGRES_PASS: 'A4Pass'
+      POSTGRES_DB: 'postgres'
+    depends_on:
+      - redis
+      - achievedb
+  achievedb:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: AchUser
+      POSTGRES_PASSWORD: A4Pass
+      POSTGRES_DB: postgres
+    volumes:
+      - ${PWD}/init.sql:/docker-entrypoint-initdb.d/1-init.sql
+
+  redis:
+    image: redis:alpine
+
+volumes:
+  web-static:
+  achievedb:

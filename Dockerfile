@@ -6,6 +6,8 @@ COPY . ./
 
 RUN go mod tidy
 
-RUN go build -o /achieveService
+RUN go build -o /appBild
 
-CMD [ "/achieveService" ]
+EXPOSE 7990
+
+CMD [ "/appBild"]

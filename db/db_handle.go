@@ -8,8 +8,17 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
 	"log"
+	"os"
+	"strconv"
 	"time"
 )
+
+func getEnv(key string, defaultVal string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		return value
+	}
+	return defaultVal
+}
 
 type postgre struct {
 	db *sqlx.DB
@@ -19,6 +28,7 @@ type userAchieveDB struct {
 	Uid              int       `db:"uid"`
 	AchieveId        int       `db:"achieve_id"`
 	AchieveLvl       int       `db:"achieve_lvl"`
+	MaxLvl           int       `db:"max_lvl"`
 	ScanCount        int       `db:"scan_count"`
 	Name             string    `db:"name"`
 	LastScan         time.Time `db:"last_scan"`
@@ -34,7 +44,14 @@ type UserDB struct {
 }
 
 func InitDB() Saver {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", "192.168.10.205", 5432, "adminpsg", "PadminSGG", "server_gredit_db")
+	port, _ := strconv.Atoi(getEnv("POSTGRES_PORT", "5432")) //хуйня какая-то, потом покрасивее надо сделать
+
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		getEnv("POSTGRES_HOST", "postgres"),
+		port,
+		getEnv("POSTGRES_USER", "postgres"),
+		getEnv("POSTGRES_PASS", "postgres"),
+		getEnv("POSTGRES_DB", "postgres"))
 
 	db, err := sqlx.Connect("pgx", psqlInfo)
 	if err != nil {
@@ -79,22 +96,22 @@ func (p *postgre) SaveUserData(user logic.User) {
 
 	usr := logicToDB(user)
 
-	usrSaveStmt, err := p.db.PrepareNamed(`INSERT INTO test_ach.users values(:usr_id, :usr_lvl)`)
+	usrSaveStmt, err := p.db.PrepareNamed(`INSERT INTO ach_service.users values(:usr_id, :usr_lvl)`)
 	if err != nil {
 		log.Fatalln("stmt  err : ", err)
 	}
 
-	achSaveStmt, err := p.db.PrepareNamed(`INSERT INTO test_ach.user_achieves values(:uid, :achieve_id, :achieve_lvl, :scan_count, :name, :last_scan, :scanned_locs, :temp_fl)`)
+	achSaveStmt, err := p.db.PrepareNamed(`INSERT INTO ach_service.user_achieves values(:uid, :achieve_id, :achieve_lvl, :max_lvl, :scan_count, :name, :last_scan, :scanned_locs, :temp_fl)`)
 	if err != nil {
 		log.Fatalln("stmt  err : ", err)
 	}
 
-	usrDel, err := p.db.Prepare(`DELETE FROM test_ach.users where usr_id = $1`)
+	usrDel, err := p.db.Prepare(`DELETE FROM ach_service.users where usr_id = $1`)
 	if err != nil {
 		log.Fatalln("stmt  err : ", err)
 	}
 
-	achDel, err := p.db.Prepare(`DELETE FROM test_ach.user_achieves where uid = $1`)
+	achDel, err := p.db.Prepare(`DELETE FROM ach_service.user_achieves where uid = $1`)
 	if err != nil {
 		log.Fatalln("stmt  err : ", err)
 	}
