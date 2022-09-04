@@ -136,9 +136,7 @@ func main() {
 
 	go redisDB.StreamListener(client, users, conn, logCh)
 
-	http.HandleFunc("/getUserInfo", func(writer http.ResponseWriter, request *http.Request) {
-		fmt.Println("USERS LIST: ", users[1010], '\n', users[1020])
-	})
+	http.HandleFunc("/getUserInfo", users.handleAchieveInfo)
 
 	fmt.Println("HANDLING!")
 	err := http.ListenAndServe(":7981", nil)

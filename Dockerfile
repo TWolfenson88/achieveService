@@ -8,6 +8,6 @@ RUN go mod tidy
 
 RUN go build -o /appBild
 
-EXPOSE 7990
+EXPOSE 7981
 
 CMD [ "/appBild"]

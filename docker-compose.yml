@@ -3,8 +3,10 @@ services:
   achieve_service:
     restart: always
     build: .
+    ports:
+      - "7981:7981"
     expose:
-      - "7990"
+      - "7981"
     links:
       - achievedb:achievedb
       - redis:redis
