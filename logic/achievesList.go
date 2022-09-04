@@ -33,7 +33,22 @@ func someTestLogic(usr *User, ach *Achieve) bool {
 	return false
 }
 
-var achList = AchieveList{10: []Achieve{{ //Массив ачив для 10й локации
+var achList = AchieveList{0: []Achieve{ //тутт общие ачивый
+	{
+		Id:               0,
+		IdLoc:            0,
+		MaxLevel:         0,
+		BeginLevel:       0,
+		ScansCountForLvl: nil,
+		NameForLvl:       nil,
+		PeriodStart:      time.Time{},
+		PeriodEnd:        time.Time{},
+		Cooldown:         0,
+		NeedAchieves:     nil,
+		NeedLocations:    nil,
+		SpecialLogic:     nil,
+	},
+}, 10: []Achieve{{ //Массив ачив для 10й локации
 	Id:               1,
 	IdLoc:            10,
 	MaxLevel:         1,

@@ -148,6 +148,8 @@ func (u *User) AddAchieve(scanTime time.Time, locId int, logCh chan string) {
 	//Получаем и фильтруем все ачивки по локации и по времени скана
 	achieves := achList[locId]
 
+	achieves = append(achieves, achList[0]...) // вот тут к проверяемому массиву аппенжу все общие ачивы
+
 	fmt.Println("ach arr len ", len(achieves))
 
 	for _, achieve := range achieves {
