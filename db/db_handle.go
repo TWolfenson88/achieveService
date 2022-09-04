@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -19,6 +20,8 @@ func getEnv(key string, defaultVal string) string {
 	}
 	return defaultVal
 }
+
+type Users map[int]*logic.User
 
 type postgre struct {
 	db *sqlx.DB
@@ -32,7 +35,7 @@ type userAchieveDB struct {
 	ScanCount        int       `db:"scan_count"`
 	Name             string    `db:"name"`
 	LastScan         time.Time `db:"last_scan"`
-	ScannedLocations []int     `db:"scanned_locs"`
+	ScannedLocations string    `db:"scanned_locs"`
 	TempFl           bool      `db:"temp_fl"`
 }
 
@@ -55,6 +58,8 @@ func InitDB() Saver {
 
 	db, err := sqlx.Connect("pgx", psqlInfo)
 	if err != nil {
+		log.Println("db conn err: ", err) //таймауты покрасивее придумать как
+		time.Sleep(15 * time.Second)
 		log.Fatalln("db conn err: ", err)
 	}
 
@@ -63,20 +68,92 @@ func InitDB() Saver {
 
 type Saver interface {
 	SaveUserData(user logic.User)
+	InitUserData() map[int]*logic.User
+}
+
+func (p *postgre) InitUserData() map[int]*logic.User {
+	users := make(map[int]*logic.User)
+
+	//dbUsers := []UserDB{}
+	rowsUsers, err := p.db.Queryx("SELECT * from ach_service.users")
+	if err != nil {
+		log.Println("users init data err : ", err)
+	}
+
+	achStmt, err := p.db.Preparex("select * from ach_service.user_achieves where uid = $1")
+
+	for rowsUsers.Next() {
+		user := logic.User{}
+		err = rowsUsers.Scan(&user.Id, &user.UsrLvl)
+		if err != nil {
+			log.Println("struct users scan err : ", err)
+		}
+
+		achRows, err := achStmt.Queryx(user.Id)
+		if err != nil {
+			log.Println("ach queryX err : ", err)
+		}
+
+		user.TempAchieves = map[int]*logic.UserAchieve{}
+		user.CurrentAchieves = map[int]*logic.UserAchieve{}
+
+		for achRows.Next() {
+			achieve := logic.UserAchieve{}
+
+			var scannedLocs string
+			var uid int
+			var tempFl bool
+
+			err = achRows.Scan(&uid, &achieve.AchieveId, &achieve.AchieveLvl, &achieve.MaxLvl, &achieve.ScanCount, &achieve.Name, &achieve.LastScan, &scannedLocs, &tempFl)
+			if err != nil {
+				log.Println("struct achieves scan err : ", err)
+			}
+
+			var scnLocsInts []int
+
+			fmt.Println("ach arr", scannedLocs)
+			if len(scannedLocs) > 0 {
+				strArr := strings.Split(scannedLocs[1:len(scannedLocs)-1], ",")
+
+				for _, s := range strArr {
+					res, err := strconv.Atoi(s)
+					if err != nil {
+						log.Println("str arr parse err", err)
+					}
+					scnLocsInts = append(scnLocsInts, res)
+				}
+			}
+
+			achieve.ScannedLocations = scnLocsInts
+
+			if tempFl {
+				user.TempAchieves[achieve.AchieveId] = &achieve
+			} else {
+				user.CurrentAchieves[achieve.AchieveId] = &achieve
+			}
+
+		}
+
+		users[user.Id] = &user
+	}
+
+	fmt.Println(users[15].CurrentAchieves[1])
+
+	return users
 }
 
 func achLogicToDB(achMap map[int]*logic.UserAchieve, uid int, fl bool) map[int]*userAchieveDB {
 	result := make(map[int]*userAchieveDB)
 	for i, achieve := range achMap {
 		result[i] = &userAchieveDB{
-			Uid:              uid,
-			AchieveId:        achieve.AchieveId,
-			AchieveLvl:       achieve.AchieveLvl,
-			ScanCount:        achieve.ScanCount,
-			Name:             achieve.Name,
-			LastScan:         achieve.LastScan,
-			ScannedLocations: achieve.ScannedLocations,
-			TempFl:           fl,
+			Uid:        uid,
+			AchieveId:  achieve.AchieveId,
+			AchieveLvl: achieve.AchieveLvl,
+			ScanCount:  achieve.ScanCount,
+			Name:       achieve.Name,
+			LastScan:   achieve.LastScan,
+			//ScannedLocations: achieve.ScannedLocations,
+			TempFl: fl,
 		}
 	}
 

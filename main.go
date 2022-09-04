@@ -38,6 +38,9 @@ func (u Users) findTopUsers() []int {
 		}
 	}
 
+	if len(result) < 5 {
+		return result
+	}
 	return result[len(result)-5:]
 }
 
@@ -66,7 +69,19 @@ func (u Users) handleAchieveInfo(w http.ResponseWriter, r *http.Request) {
 	user, ok := u[usrId]
 	if !ok {
 
-		_, err := w.Write([]byte("user not found"))
+		usrInfo := &UserInfo{
+			UserLevel:          0,
+			LastMinuteAchieves: nil,
+			CurrentAchieves:    nil,
+			TopUsers:           u.findTopUsers(),
+		}
+
+		marshallUserInfo, err := json.Marshal(usrInfo)
+		if err != nil {
+			log.Println("MARSHALL ERR : ", err)
+		}
+
+		_, err = w.Write(marshallUserInfo)
 		if err != nil {
 			log.Println("user error")
 		}
@@ -137,7 +152,7 @@ func main() {
 	go SendLogs(logCh)
 
 	users := Users{}
-
+	users = conn.InitUserData()
 	//users := map[int]*logic.User{}
 
 	client := redisDB.InitRedis()
