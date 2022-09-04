@@ -68,10 +68,14 @@ func (a *Achieve) checkConditions(usr *User, scanTime time.Time) bool {
 
 	fmt.Println("фчива^ \n", a)
 
-	if a.SpecialLogic == nil && a.NeedAchieves == nil && checkCooldown(ach.LastScan, scanTime) {
+	if !checkCooldown(ach.LastScan, scanTime) {
+		return false
+	}
+
+	if a.SpecialLogic == nil && a.NeedAchieves == nil {
 		fmt.Println("очень просто ")
 		return true
-	} else if a.SpecialLogic == nil && a.NeedAchieves != nil && checkCooldown(ach.LastScan, scanTime) {
+	} else if a.SpecialLogic == nil && a.NeedAchieves != nil {
 		fmt.Println("чуть сложнее")
 		for _, elem := range a.NeedAchieves {
 			if uAch, ok := usr.CurrentAchieves[elem.NeedId]; !ok {
@@ -83,10 +87,10 @@ func (a *Achieve) checkConditions(usr *User, scanTime time.Time) bool {
 				return true
 			}
 		}
-	} else if a.SpecialLogic != nil && a.NeedAchieves == nil && checkCooldown(ach.LastScan, scanTime) {
+	} else if a.SpecialLogic != nil && a.NeedAchieves == nil {
 		fmt.Println("спешщл логик")
 		return a.SpecialLogic(usr, a)
-	} else if a.SpecialLogic != nil && a.NeedAchieves != nil && checkCooldown(ach.LastScan, scanTime) {
+	} else if a.SpecialLogic != nil && a.NeedAchieves != nil {
 		fmt.Println("довольно сложно")
 		for _, elem := range a.NeedAchieves {
 			if uAch, ok := usr.CurrentAchieves[elem.NeedId]; !ok {
