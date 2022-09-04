@@ -144,8 +144,6 @@ func (p *postgre) InitUserData() map[int]*logic.User {
 		users[user.Id] = &user
 	}
 
-	fmt.Println(users[15].CurrentAchieves[1])
-
 	return users
 }
 
