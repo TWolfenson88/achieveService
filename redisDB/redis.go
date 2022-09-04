@@ -54,13 +54,13 @@ func StreamListener(rc *redis.Client, users map[int]*logic.User, pg db.Saver, lo
 	ctx := context.Background()
 	lastId, err := rc.Get(ctx, "LastID").Result()
 	if err != nil {
-		log.Fatalln("GET ERR! ", err) //TODO: обработать момент если в ключе пусто
+		log.Println("GET ERR! ", err) //TODO: обработать момент если в ключе пусто
 	}
 	fmt.Println("LASTID: ", lastId)
 	//read stream after last worked id
 	prevStream, err := rc.XRange(ctx, "TestStream", lastId, "+").Result()
 	if err != nil {
-		log.Fatalln("XRANGE ERR! ", err)
+		log.Println("XRANGE ERR! ", err)
 	}
 	for _, message := range prevStream {
 		fmt.Println("Stream", message.ID)
@@ -82,21 +82,18 @@ func StreamListener(rc *redis.Client, users map[int]*logic.User, pg db.Saver, lo
 			Block:   0,
 		}).Result()
 		if err != nil {
-			log.Fatalln("XREAD ERR : ", err)
+			log.Println("XREAD ERR : ", err)
 		}
 		for _, stream := range reslt {
 			for _, msg := range stream.Messages {
 				fmt.Println("CYCLE MSGG", msg.ID)
-				//fmt.Println("MESSAGE : ", msg.Values, "ints:", msg.Values["location"])
-				//fmt.Println("MESSAGE : ", msg.Values, "ints:", msg.Values["userId"].(int))
-				//fmt.Println("MESSAGE : ", msg.Values, "ints:", msg.Values["time"].(int))
 
 				loc, err := strconv.Atoi(msg.Values["location"].(string))
 				userId, err := strconv.Atoi(msg.Values["userId"].(string))
 				tim, err := strconv.Atoi(msg.Values["time"].(string))
 
 				if err != nil {
-					log.Fatalln("PARSE ERR : ", err)
+					log.Println("PARSE ERR : ", err)
 				}
 
 				fmt.Println(loc, err)
@@ -131,29 +128,6 @@ func StreamListener(rc *redis.Client, users map[int]*logic.User, pg db.Saver, lo
 
 			}
 		}
-
-		/*		select {
-				case <-stop:
-					return
-				default:
-					reslt, err := r.XRead(ctx, &redis.XReadArgs{
-						Streams: []string{"TestStream", "$"},
-						Count:   1,
-						Block:   0,
-					})
-					if err != nil{
-						fmt.Println(err)
-						break
-					}
-
-					for _, stream := range reslt {
-						for _, message := range stream.Messages {
-							fmt.Println("RESULT:", message.ID)
-
-							bufCh <- message.ID
-						}
-					}
-				}*/
 
 	}
 }

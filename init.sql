@@ -13,7 +13,7 @@ create table ach_service.user_achieves (
     scan_count int,
     name text,
     last_scan timestamp,
-    scanned_locs []int,
+    scanned_locs int[],
     temp_fl bool
 );
 
