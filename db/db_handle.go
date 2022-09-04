@@ -100,16 +100,23 @@ func (p *postgre) InitUserData() map[int]*logic.User {
 		for achRows.Next() {
 			achieve := logic.UserAchieve{}
 
-			var scannedLocs string
+			var scannedLocsNull sql.NullString
 			var uid int
 			var tempFl bool
 
-			err = achRows.Scan(&uid, &achieve.AchieveId, &achieve.AchieveLvl, &achieve.MaxLvl, &achieve.ScanCount, &achieve.Name, &achieve.LastScan, &scannedLocs, &tempFl)
+			err = achRows.Scan(&uid, &achieve.AchieveId, &achieve.AchieveLvl, &achieve.MaxLvl, &achieve.ScanCount, &achieve.Name, &achieve.LastScan, &scannedLocsNull, &tempFl)
 			if err != nil {
 				log.Println("struct achieves scan err : ", err)
 			}
 
 			var scnLocsInts []int
+			var scannedLocs string
+
+			if scannedLocsNull.Valid {
+				scannedLocs = scannedLocsNull.String
+			} else {
+				scannedLocs = ""
+			}
 
 			fmt.Println("ach arr", scannedLocs)
 			if len(scannedLocs) > 0 {
