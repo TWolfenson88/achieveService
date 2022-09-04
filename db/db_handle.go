@@ -35,7 +35,7 @@ type userAchieveDB struct {
 	ScanCount        int       `db:"scan_count"`
 	Name             string    `db:"name"`
 	LastScan         time.Time `db:"last_scan"`
-	ScannedLocations string    `db:"scanned_locs"`
+	ScannedLocations []int     `db:"scanned_locs"`
 	TempFl           bool      `db:"temp_fl"`
 }
 
@@ -151,14 +151,14 @@ func achLogicToDB(achMap map[int]*logic.UserAchieve, uid int, fl bool) map[int]*
 	result := make(map[int]*userAchieveDB)
 	for i, achieve := range achMap {
 		result[i] = &userAchieveDB{
-			Uid:        uid,
-			AchieveId:  achieve.AchieveId,
-			AchieveLvl: achieve.AchieveLvl,
-			ScanCount:  achieve.ScanCount,
-			Name:       achieve.Name,
-			LastScan:   achieve.LastScan,
-			//ScannedLocations: achieve.ScannedLocations,
-			TempFl: fl,
+			Uid:              uid,
+			AchieveId:        achieve.AchieveId,
+			AchieveLvl:       achieve.AchieveLvl,
+			ScanCount:        achieve.ScanCount,
+			Name:             achieve.Name,
+			LastScan:         achieve.LastScan,
+			ScannedLocations: achieve.ScannedLocations,
+			TempFl:           fl,
 		}
 	}
 
