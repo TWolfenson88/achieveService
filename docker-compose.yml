@@ -29,7 +29,7 @@ services:
       POSTGRES_PASSWORD: A4Pass
       POSTGRES_DB: postgres
     volumes:
-      - ${PWD}/init.sql:/docker-entrypoint-initdb.d/
+      - ./init.sql:/docker-entrypoint-initdb.d/1-init.sql
 
   redis:
     image: redis:alpine
