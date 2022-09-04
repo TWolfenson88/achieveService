@@ -63,7 +63,15 @@ func (u Users) handleAchieveInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := u[usrId]
+	user, ok := u[usrId]
+	if !ok {
+
+		_, err := w.Write([]byte("user not found"))
+		if err != nil {
+			log.Println("user error")
+		}
+		return
+	}
 	hndlAchs := []HandlerAchieves{}
 
 	for _, achieve := range user.CurrentAchieves {
