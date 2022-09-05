@@ -2,6 +2,7 @@ package logic
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
 )
 
@@ -36,14 +37,77 @@ func someTestLogic(usr *User, ach *Achieve) bool {
 var achList = AchieveList{
 	0: []Achieve{ //тутт общие ачивый
 		{
-			Id:               0,
+			Id:               1,
 			IdLoc:            0,
-			MaxLevel:         0,
-			BeginLevel:       0,
+			MaxLevel:         1,
+			BeginLevel:       1,
 			ScansCountForLvl: nil,
-			NameForLvl:       nil,
+			NameForLvl:       map[int]string{1: "Ранняя пташка"},
+			PeriodStart:      time.Time{}.Add(7 * time.Hour),
+			PeriodEnd:        time.Time{}.Add(8*time.Hour + 59*time.Minute),
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic:     nil,
+		},
+		{
+			Id:               2,
+			IdLoc:            0,
+			MaxLevel:         1,
+			BeginLevel:       1,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "Добро пожаловать"},
 			PeriodStart:      time.Time{},
 			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic:     nil,
+		},
+		{
+			Id:               3,
+			IdLoc:            0,
+			MaxLevel:         1,
+			BeginLevel:       1,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "Счастливчик"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve) bool {
+				s1 := rand.NewSource(time.Now().UnixNano())
+				r1 := rand.New(s1)
+				if r1.Intn(100) > 90 {
+					return true
+				}
+				return false
+			},
+		},
+		{
+			Id:               4,
+			IdLoc:            0,
+			MaxLevel:         1,
+			BeginLevel:       1,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "Бессмертный"},
+			PeriodStart:      time.Time{}.Add(6 * time.Hour),
+			PeriodEnd:        time.Time{}.Add(7*time.Hour + 30*time.Minute),
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic:     nil,
+		},
+		{
+			Id:               5,
+			IdLoc:            0,
+			MaxLevel:         1,
+			BeginLevel:       1,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "4-20, тебе нормально?"},
+			PeriodStart:      time.Time{}.Add(4*time.Hour + 15*time.Minute),
+			PeriodEnd:        time.Time{}.Add(4*time.Hour + 25*time.Minute),
 			Cooldown:         0,
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
@@ -65,57 +129,80 @@ var achList = AchieveList{
 			NeedLocations:    nil,
 		},
 	},
+	8: []Achieve{
+		{
+			Id:               81,
+			IdLoc:            8,
+			MaxLevel:         1,
+			BeginLevel:       1,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "Ранний обжора"},
+			PeriodStart:      time.Time{}.Add(10 * time.Hour),
+			PeriodEnd:        time.Time{}.Add(11 * time.Hour),
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+		},
+		{
+			Id:               82,
+			IdLoc:            8,
+			MaxLevel:         1,
+			BeginLevel:       1,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "Солидный обедарь"},
+			PeriodStart:      time.Time{}.Add(14 * time.Hour),
+			PeriodEnd:        time.Time{}.Add(15 * time.Hour),
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+		},
+		{
+			Id:               82,
+			IdLoc:            8,
+			MaxLevel:         1,
+			BeginLevel:       1,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "Эпичный ужинарь"},
+			PeriodStart:      time.Time{}.Add(19 * time.Hour),
+			PeriodEnd:        time.Time{}.Add(20*time.Hour + 30*time.Minute),
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+		},
+	},
+	9: []Achieve{
+		{
+			Id:               91,
+			IdLoc:            9,
+			MaxLevel:         3,
+			BeginLevel:       0,
+			ScansCountForLvl: map[int]int{1: 1, 2: 4, 3: 7},
+			NameForLvl:       map[int]string{1: "Фанат", 2: "Коллекционер", 3: "Художник"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+		},
+	},
 	10: []Achieve{
-		{ //Массив ачив для 10й локации
-			Id:               1,
+		{
+			Id:               101,
 			IdLoc:            10,
-			MaxLevel:         1,
-			BeginLevel:       1,
-			ScansCountForLvl: nil,
-			NameForLvl:       map[int]string{1: "Тестовая одноуровневая ачива простая"},
+			MaxLevel:         3,
+			BeginLevel:       0,
+			ScansCountForLvl: map[int]int{1: 3, 2: 6, 3: 9},
+			NameForLvl:       map[int]string{1: "Посетитель", 2: "Забиватель", 3: "Твой братюня кальянщик"},
 			PeriodStart:      time.Time{},
 			PeriodEnd:        time.Time{},
 			Cooldown:         0,
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
-		},
-		{
-			Id:               2,
-			IdLoc:            10,
-			MaxLevel:         1,
-			BeginLevel:       1,
-			ScansCountForLvl: nil,
-			NameForLvl:       map[int]string{1: "Тестовая одноуровневая ачива на несколько локаций"},
-			PeriodStart:      time.Time{},
-			PeriodEnd:        time.Time{},
-			Cooldown:         0,
-			NeedAchieves:     nil,
-			NeedLocations:    []int{10, 20, 30},
-			SpecialLogic:     someTestLogic,
-		},
-		{
-			Id:               3,
-			IdLoc:            10,
-			MaxLevel:         1,
-			BeginLevel:       1,
-			ScansCountForLvl: nil,
-			NameForLvl:       map[int]string{1: "Тестовая ачива с спецусловием"},
-			PeriodStart:      time.Time{},
-			PeriodEnd:        time.Time{},
-			Cooldown:         0,
-			NeedAchieves:     nil,
-			NeedLocations:    nil,
-			SpecialLogic: func(usr *User, ach *Achieve) bool {
-				if len(usr.CurrentAchieves) == 0 {
-					return true
-				}
-				return false
-			},
 		},
 	},
 	11: []Achieve{
 		{
-			Id:               32,
+			Id:               111,
 			IdLoc:            11,
 			MaxLevel:         2,
 			BeginLevel:       0,
@@ -129,9 +216,41 @@ var achList = AchieveList{
 			SpecialLogic:     nil,
 		},
 	},
+	12: []Achieve{
+		{
+			Id:               121,
+			IdLoc:            12,
+			MaxLevel:         1,
+			BeginLevel:       1,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "Ух ты, что тут?"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic:     nil,
+		},
+	},
+	14: []Achieve{
+		{
+			Id:               141,
+			IdLoc:            14,
+			MaxLevel:         1,
+			BeginLevel:       1,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "Мокрый, но жаркий"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic:     nil,
+		},
+	},
 	20: []Achieve{
 		{
-			Id:               33,
+			Id:               201,
 			IdLoc:            20,
 			MaxLevel:         1,
 			BeginLevel:       1,
@@ -154,7 +273,7 @@ var achList = AchieveList{
 	},
 	30: []Achieve{
 		{
-			Id:               34,
+			Id:               301,
 			IdLoc:            30,
 			MaxLevel:         1,
 			BeginLevel:       1,
