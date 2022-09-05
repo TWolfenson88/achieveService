@@ -130,12 +130,15 @@ func SendLogs(ch chan string) {
 				fmt.Println(")))")
 			}
 
-			req.URL.Query().Add("log_message", rslt)
-			req.URL.Query().Add("secret", "PosholNahuySuka")
+                        q := req.URL.Query()
+			q.Add("log_message", rslt)
+			q.Add("secret", "PosholNahuySuka") 
+                        req.URL.RawQuery = q.Encode()
+                        fmt.Println(req.URL.String())
 
 			_, err = client.Do(req)
 			if err != nil {
-				fmt.Println(")))")
+				fmt.Println(")))", err)
 			}
 
 		}
