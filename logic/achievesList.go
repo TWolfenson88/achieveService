@@ -33,73 +33,91 @@ func someTestLogic(usr *User, ach *Achieve) bool {
 	return false
 }
 
-var achList = AchieveList{0: []Achieve{ //тутт общие ачивый
-	{
-		Id:               0,
-		IdLoc:            0,
-		MaxLevel:         0,
-		BeginLevel:       0,
-		ScansCountForLvl: nil,
-		NameForLvl:       nil,
-		PeriodStart:      time.Time{},
-		PeriodEnd:        time.Time{},
-		Cooldown:         0,
-		NeedAchieves:     nil,
-		NeedLocations:    nil,
-		SpecialLogic:     nil,
-	},
-}, 10: []Achieve{{ //Массив ачив для 10й локации
-	Id:               1,
-	IdLoc:            10,
-	MaxLevel:         1,
-	BeginLevel:       1,
-	ScansCountForLvl: nil,
-	NameForLvl:       map[int]string{1: "Тестовая одноуровневая ачива простая"},
-	PeriodStart:      time.Time{},
-	PeriodEnd:        time.Time{},
-	Cooldown:         0,
-	NeedAchieves:     nil,
-	NeedLocations:    nil,
-},
-	{
-		Id:               2,
-		IdLoc:            10,
-		MaxLevel:         1,
-		BeginLevel:       1,
-		ScansCountForLvl: nil,
-		NameForLvl:       map[int]string{1: "Тестовая одноуровневая ачива на несколько локаций"},
-		PeriodStart:      time.Time{},
-		PeriodEnd:        time.Time{},
-		Cooldown:         0,
-		NeedAchieves:     nil,
-		NeedLocations:    []int{10, 20, 30},
-		SpecialLogic:     someTestLogic,
-	},
-	{
-		Id:               3,
-		IdLoc:            10,
-		MaxLevel:         1,
-		BeginLevel:       1,
-		ScansCountForLvl: nil,
-		NameForLvl:       map[int]string{1: "Тестовая ачива с спецусловием"},
-		PeriodStart:      time.Time{},
-		PeriodEnd:        time.Time{},
-		Cooldown:         0,
-		NeedAchieves:     nil,
-		NeedLocations:    nil,
-		SpecialLogic: func(usr *User, ach *Achieve) bool {
-			if len(usr.CurrentAchieves) == 0 {
-				return true
-			}
-			return false
+var achList = AchieveList{
+	0: []Achieve{ //тутт общие ачивый
+		{
+			Id:               0,
+			IdLoc:            0,
+			MaxLevel:         0,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       nil,
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic:     nil,
 		},
 	},
-},
+	7: []Achieve{ // дед бар
+		{
+			Id:               71,
+			IdLoc:            7,
+			MaxLevel:         3,
+			BeginLevel:       0,
+			ScansCountForLvl: map[int]int{1: 7, 2: 14, 3: 20},
+			NameForLvl:       map[int]string{1: "Любитель вкусного", 2: "Специалист миксологии", 3: "Солист затейник"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+		},
+	},
+	10: []Achieve{
+		{ //Массив ачив для 10й локации
+			Id:               1,
+			IdLoc:            10,
+			MaxLevel:         1,
+			BeginLevel:       1,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "Тестовая одноуровневая ачива простая"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+		},
+		{
+			Id:               2,
+			IdLoc:            10,
+			MaxLevel:         1,
+			BeginLevel:       1,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "Тестовая одноуровневая ачива на несколько локаций"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    []int{10, 20, 30},
+			SpecialLogic:     someTestLogic,
+		},
+		{
+			Id:               3,
+			IdLoc:            10,
+			MaxLevel:         1,
+			BeginLevel:       1,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "Тестовая ачива с спецусловием"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve) bool {
+				if len(usr.CurrentAchieves) == 0 {
+					return true
+				}
+				return false
+			},
+		},
+	},
 	11: []Achieve{
 		{
 			Id:               32,
 			IdLoc:            11,
-			MaxLevel:         1,
+			MaxLevel:         2,
 			BeginLevel:       0,
 			ScansCountForLvl: map[int]int{1: 2, 2: 4},
 			NameForLvl:       nil,

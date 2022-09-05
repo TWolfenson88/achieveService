@@ -19,15 +19,17 @@ func TestUser_AddAchieve(t *testing.T) {
 		CurrentAchieves: map[int]*UserAchieve{},
 	}
 
+	logCh := make(chan string, 8)
+
 	t.Run("Just some add", func(t *testing.T) {
 
-		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 10)
+		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 10, logCh)
 
 		fmt.Println(usr.TempAchieves[2], "NOOT NEELLLLLLLLLLLLL")
 
-		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 20)
-		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 30)
-		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 10)
+		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 20, logCh)
+		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 30, logCh)
+		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 10, logCh)
 
 		fmt.Println("FINISH! ________")
 
@@ -37,20 +39,46 @@ func TestUser_AddAchieve(t *testing.T) {
 	})
 
 	t.Run("Check lvl increase", func(t *testing.T) {
-		t.Skip()
-		fmt.Println("test print 0 :", usr.CurrentAchieves[21], usr.TempAchieves[21])
-		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 11)
-		fmt.Println("test print 1 :", usr.CurrentAchieves[21], usr.TempAchieves[21])
-		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 11)
-		fmt.Println("test print 2 :", usr.CurrentAchieves[21], usr.TempAchieves[21])
-		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 11)
-		fmt.Println("test print 3 :", usr.CurrentAchieves[21], usr.TempAchieves[21])
-		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 11)
+		//t.Skip()
+		fmt.Println("test print 0 :", usr.CurrentAchieves[32], usr.TempAchieves[32])
+		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 11, logCh)
+		fmt.Println("test print 1 :", usr.CurrentAchieves[32], usr.TempAchieves[32])
+		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 11, logCh)
+		fmt.Println("test print 2 :", usr.CurrentAchieves[32], usr.TempAchieves[32])
+		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 11, logCh)
+		fmt.Println("test print 3 :", usr.CurrentAchieves[32], usr.TempAchieves[32])
+		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 11, logCh)
 		//fmt.Println("test print 14 :", usr.CurrentAchieves[21], usr.TempAchieves[21])
 
-		fmt.Println("test print:", usr.CurrentAchieves[21], usr.TempAchieves[21])
+		fmt.Println("test print:", usr.CurrentAchieves[32], usr.TempAchieves[32])
 
-		require.NotNil(t, usr.CurrentAchieves[21])
+		require.NotNil(t, usr.CurrentAchieves[32])
+	})
+
+	t.Run("Check bar achievement", func(t *testing.T) {
+		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 1, 0, 0, time.Local), 7, logCh)
+		fmt.Println("Added bar one time ", usr.TempAchieves[71].AchieveLvl)
+		for count := 1; count < 6; count++ {
+			usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10+5*count, 0, 0, time.Local), 7, logCh)
+			fmt.Println("Scan count: ", usr.TempAchieves[71].ScanCount)
+		}
+		fmt.Println("Added bar six times ", usr.TempAchieves[71])
+
+		usr.AddAchieve(time.Date(2022, time.June, 7, 8, 1, 0, 0, time.Local), 7, logCh)
+
+		fmt.Println(usr.CurrentAchieves[71])
+
+		for count := 1; count < 9; count++ {
+			usr.AddAchieve(time.Date(2022, time.June, 7, 8, 10+5*count, 0, 0, time.Local), 7, logCh)
+			fmt.Println("Scan count: ", usr.TempAchieves[71].ScanCount, usr.CurrentAchieves[71].ScanCount)
+		}
+		fmt.Println(usr.CurrentAchieves[71], usr.TempAchieves[71])
+
+		for count := 1; count < 9; count++ {
+			usr.AddAchieve(time.Date(2022, time.June, 7, 9, 10+5*count, 0, 0, time.Local), 7, logCh)
+			fmt.Println("Scan count: ", usr.TempAchieves[71].ScanCount, usr.CurrentAchieves[71].ScanCount)
+		}
+		fmt.Println(usr.CurrentAchieves[71], usr.TempAchieves[71])
 	})
 
 }
