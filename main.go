@@ -15,6 +15,7 @@ import (
 type Users map[int]*logic.User
 
 type HandlerAchieves struct {
+	AchieveId	int `json:"achieve_id"`
 	AchieveName  string `json:"achieve_name"`
 	CurrentLevel int    `json:"current_level"`
 	MaxLevel     int    `json:"max_level"`
@@ -48,6 +49,8 @@ func findLastAchieves(user *logic.User) []string {
 	result := []string{}
 
 	for _, achieve := range user.CurrentAchieves {
+		//fmt.Println("SUB TIME ", time.Now().Sub(achieve.LastScan))
+
 		if time.Now().Sub(achieve.LastScan) < 1*time.Minute {
 			result = append(result, achieve.Name)
 		}
@@ -91,6 +94,7 @@ func (u Users) handleAchieveInfo(w http.ResponseWriter, r *http.Request) {
 
 	for _, achieve := range user.CurrentAchieves {
 		hAch := HandlerAchieves{
+			AchieveId: achieve.AchieveId,
 			AchieveName:  achieve.Name,
 			CurrentLevel: achieve.AchieveLvl,
 			MaxLevel:     achieve.MaxLvl,
