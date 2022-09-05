@@ -34,6 +34,58 @@ func someTestLogic(usr *User, ach *Achieve) bool {
 	return false
 }
 
+func TestLogicForMultipleLosc(usr *User, ach *Achieve, locId int, scanTime time.Time, needLocs map[int]struct{}, timeout time.Duration, logCh chan string) bool {
+
+	_, okCur := usr.CurrentAchieves[ach.Id] // проверяем наличие ачивы у юзера в уже полученных
+	if okCur {
+		return false
+	}
+	tempAch, okTmp := usr.TempAchieves[ach.Id] // проверяем наличие во временных ачивах
+	_, nlOk := needLocs[locId]                 // проверяем, нужную ли локацию отсканили
+
+	if !okTmp && nlOk { //если не нашли во временных ачивах, добавляем туда эту ачиву
+		usr.TempAchieves[ach.Id] = &UserAchieve{
+			AchieveId:        6,
+			AchieveLvl:       0,
+			MaxLvl:           1,
+			ScanCount:        1,
+			Name:             "",
+			LastScan:         scanTime,
+			ScannedLocations: []int{locId},
+		}
+	} else if okTmp && nlOk {
+		if scanTime.Sub(tempAch.LastScan) < timeout { //если с момента последнего скана подходящей локации меньше 20 минут, ок
+			tempAch.LastScan = scanTime
+
+			founded := false //тут мы по бырику перебирем уже отсканированные локации в ачивке
+			for _, location := range tempAch.ScannedLocations {
+				if location == locId {
+					founded = true
+				}
+			}
+
+			if !founded { //и если не находим, то добавляем в массив айдишник локи
+				tempAch.ScannedLocations = append(tempAch.ScannedLocations, locId)
+			}
+
+			if len(tempAch.ScannedLocations) == len(needLocs) { //и если вдруг оказалось что у нас все локации собрались, добавляем ачиву в полученные
+
+				tempAch.Name = ach.NameForLvl[1] // тут обновляем имя
+				tempAch.AchieveLvl = 1           // тут даем уровень
+				logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", usr.Id, tempAch.Name, tempAch.AchieveLvl)
+				usr.CurrentAchieves[ach.Id] = tempAch
+				return false
+			}
+
+		} else {
+
+			delete(usr.TempAchieves, ach.Id) //если прошло больше 20 минут, удаляем ачивку, обосрамс
+		}
+	}
+
+	return false
+}
+
 var achList = AchieveList{
 	0: []Achieve{ //тутт общие ачивый
 		{
@@ -76,7 +128,7 @@ var achList = AchieveList{
 			Cooldown:         0,
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
-			SpecialLogic: func(usr *User, ach *Achieve) bool {
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
 				s1 := rand.NewSource(time.Now().UnixNano())
 				r1 := rand.New(s1)
 				if r1.Intn(100) > 90 {
@@ -112,6 +164,60 @@ var achList = AchieveList{
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
 			SpecialLogic:     nil,
+		},
+		{
+			Id:               6,
+			IdLoc:            0,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "локации 2-3-4-5-6"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+				needLocs := map[int]struct{}{2: {}, 3: {}, 4: {}, 5: {}, 6: {}} //мапа необходимых локаций
+				timeout := 20 * time.Minute
+				return TestLogicForMultipleLosc(usr, ach, locId, scanTime, needLocs, timeout, logCh) // в случае успешного прохождения логики ачивка добавится в Current прям из этой функции
+			},
+		},
+		{
+			Id:               7,
+			IdLoc:            0,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "локации 1-2-3-4-5-6-7-8-9-10-11-13"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+				needLocs := map[int]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}} //мапа необходимых локаций
+				timeout := 60 * time.Minute
+				return TestLogicForMultipleLosc(usr, ach, locId, scanTime, needLocs, timeout, logCh)
+			},
+		},
+		{
+			Id:               8,
+			IdLoc:            0,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "локации 13-11-10-7-5"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+				needLocs := map[int]struct{}{5: {}, 7: {}, 10: {}, 11: {}, 13: {}} //мапа необходимых локаций
+				timeout := 20 * time.Minute
+				return TestLogicForMultipleLosc(usr, ach, locId, scanTime, needLocs, timeout, logCh)
+			},
 		},
 	},
 	7: []Achieve{ // дед бар
@@ -232,6 +338,36 @@ var achList = AchieveList{
 			SpecialLogic:     nil,
 		},
 	},
+	13: []Achieve{
+		{
+			Id:               131,
+			IdLoc:            13,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "Ух ебать сложная ачивка зависимая 13-9"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic:     nil,
+		},
+		{
+			Id:               131,
+			IdLoc:            13,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "Ух ебать сложная ачивка зависимая 13-4"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic:     nil,
+		},
+	},
 	14: []Achieve{
 		{
 			Id:               141,
@@ -261,7 +397,7 @@ var achList = AchieveList{
 			Cooldown:         0,
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
-			SpecialLogic: func(usr *User, ach *Achieve) bool {
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
 				fmt.Println("chck20 ")
 				if achach, ok := usr.TempAchieves[2]; ok {
 					fmt.Println("chck20 ")
@@ -284,7 +420,7 @@ var achList = AchieveList{
 			Cooldown:         0,
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
-			SpecialLogic: func(usr *User, ach *Achieve) bool {
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
 				fmt.Println("chck30 ")
 				if achach, ok := usr.TempAchieves[2]; ok {
 					fmt.Println("chck30 ")

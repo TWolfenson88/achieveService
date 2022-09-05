@@ -17,7 +17,7 @@ type Achieve struct {
 	Cooldown         time.Duration
 	NeedAchieves     map[int]AchieveElem
 	NeedLocations    []int
-	SpecialLogic     func(usr *User, ach *Achieve) bool
+	SpecialLogic     func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool
 }
 
 type AchieveElem struct {
@@ -56,7 +56,7 @@ func checkCooldown(lastScan, scanTime time.Time) bool {
 	return scanTime.Sub(lastScan) < (5 * time.Minute)
 }
 
-func (a *Achieve) checkConditions(usr *User, scanTime time.Time) bool {
+func (a *Achieve) checkConditions(usr *User, scanTime time.Time, locId int, logCh chan string) bool {
 
 	fmt.Println("User checking conditions: ", usr)
 
@@ -97,7 +97,7 @@ func (a *Achieve) checkConditions(usr *User, scanTime time.Time) bool {
 		}
 	} else if a.SpecialLogic != nil && a.NeedAchieves == nil {
 		fmt.Println("Achieve with special logic")
-		return a.SpecialLogic(usr, a)
+		return a.SpecialLogic(usr, a, locId, scanTime, logCh)
 	} else if a.SpecialLogic != nil && a.NeedAchieves != nil {
 		fmt.Println("Achieve with special logic and dependancies")
 		for _, elem := range a.NeedAchieves {
@@ -107,7 +107,7 @@ func (a *Achieve) checkConditions(usr *User, scanTime time.Time) bool {
 				return false
 			} else {
 				fmt.Println("Checking special logic")
-				return a.SpecialLogic(usr, a)
+				return a.SpecialLogic(usr, a, locId, scanTime, logCh)
 			}
 		}
 	}
@@ -166,7 +166,7 @@ func (u *User) AddAchieve(scanTime time.Time, locId int, logCh chan string) {
 
 	for _, achieve := range achieves {
 		fmt.Println("Checking achieve ", achieve.Id)
-		if isScanInInterval(achieve, scanTime) && achieve.checkConditions(u, scanTime) {
+		if isScanInInterval(achieve, scanTime) && achieve.checkConditions(u, scanTime, locId, logCh) {
 			fmt.Println("KEKE")
 			uAch := convertToUserAchieve(achieve)
 
@@ -178,7 +178,7 @@ func (u *User) AddAchieve(scanTime time.Time, locId int, logCh chan string) {
 				tempUsrAch.AchieveLvl++
 				u.CurrentAchieves[tempUsrAch.AchieveId] = tempUsrAch
 
-				logCh <- fmt.Sprintf("%d получил ачивку %s уровня %s", u.Id, tempUsrAch.Name, tempUsrAch.AchieveLvl)
+				logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", u.Id, tempUsrAch.Name, tempUsrAch.AchieveLvl)
 
 			} else if ok && achieve.ScansCountForLvl != nil {
 				fmt.Println("Increasing achieve scan count ")

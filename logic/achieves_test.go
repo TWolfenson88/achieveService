@@ -23,6 +23,8 @@ func TestUser_AddAchieve(t *testing.T) {
 
 	t.Run("Just some add", func(t *testing.T) {
 
+		t.Skip()
+
 		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 10, logCh)
 
 		fmt.Println(usr.TempAchieves[2], "NOOT NEELLLLLLLLLLLLL")
@@ -39,7 +41,9 @@ func TestUser_AddAchieve(t *testing.T) {
 	})
 
 	t.Run("Check lvl increase", func(t *testing.T) {
-		//t.Skip()
+
+		t.Skip()
+
 		fmt.Println("test print 0 :", usr.CurrentAchieves[32], usr.TempAchieves[32])
 		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10, 0, 0, time.Local), 11, logCh)
 		fmt.Println("test print 1 :", usr.CurrentAchieves[32], usr.TempAchieves[32])
@@ -56,6 +60,9 @@ func TestUser_AddAchieve(t *testing.T) {
 	})
 
 	t.Run("Check bar achievement", func(t *testing.T) {
+
+		t.Skip()
+
 		lUsr := &User{
 			Id:              2,
 			UsrLvl:          0,
@@ -85,6 +92,9 @@ func TestUser_AddAchieve(t *testing.T) {
 	})
 
 	t.Run("Check id 1-3 achievements", func(t *testing.T) {
+
+		t.Skip()
+
 		lUsr := &User{
 			Id:              3,
 			UsrLvl:          0,
@@ -108,6 +118,87 @@ func TestUser_AddAchieve(t *testing.T) {
 		}
 		fmt.Println("Count for lucky ", count)
 		fmt.Println(lUsr.CurrentAchieves)
+	})
+
+	t.Run("check 2-3-4-5-6 achieve sucess", func(t *testing.T) {
+		//t.Skip()
+
+		lUsr := &User{
+			Id:              3,
+			UsrLvl:          0,
+			TempAchieves:    map[int]*UserAchieve{},
+			CurrentAchieves: map[int]*UserAchieve{},
+		}
+		lTime := time.Date(2022, time.June, 7, 11, 10, 0, 0, time.Local)
+
+		lUsr.AddAchieve(lTime, 2, logCh)
+
+		_, ok := lUsr.CurrentAchieves[6] //проверяем, не получена ли 6я ачивка
+		require.False(t, ok)
+
+		lTime = time.Date(2022, time.June, 7, 11, 11, 0, 0, time.Local)
+		lUsr.AddAchieve(lTime, 3, logCh)
+
+		_, ok = lUsr.CurrentAchieves[6]
+		require.False(t, ok)
+
+		lTime = time.Date(2022, time.June, 7, 11, 12, 0, 0, time.Local)
+		lUsr.AddAchieve(lTime, 5, logCh)
+
+		_, ok = lUsr.CurrentAchieves[6]
+		require.False(t, ok)
+
+		lTime = time.Date(2022, time.June, 7, 11, 13, 0, 0, time.Local)
+		lUsr.AddAchieve(lTime, 4, logCh)
+
+		_, ok = lUsr.CurrentAchieves[6]
+		require.False(t, ok)
+
+		lTime = time.Date(2022, time.June, 7, 11, 14, 0, 0, time.Local)
+		lUsr.AddAchieve(lTime, 6, logCh)
+
+		_, ok = lUsr.CurrentAchieves[6]
+		require.True(t, ok)
+
+		//lTime = time.Date(2022, time.June, 7, 11, 11, 0, 0, time.Local)
+		//lUsr.AddAchieve(lTime, 3, logCh)
+	})
+
+	t.Run("check 2-3-4-5-6 achieve out of time", func(t *testing.T) {
+		//t.Skip()
+
+		lUsr := &User{
+			Id:              3,
+			UsrLvl:          0,
+			TempAchieves:    map[int]*UserAchieve{},
+			CurrentAchieves: map[int]*UserAchieve{},
+		}
+		lTime := time.Date(2022, time.June, 7, 11, 10, 0, 0, time.Local)
+
+		lUsr.AddAchieve(lTime, 2, logCh)
+
+		_, ok := lUsr.CurrentAchieves[6] //проверяем, не получена ли 6я ачивка
+		require.False(t, ok)
+
+		lTime = time.Date(2022, time.June, 7, 11, 11, 0, 0, time.Local)
+		lUsr.AddAchieve(lTime, 3, logCh)
+
+		_, ok = lUsr.CurrentAchieves[6]
+		require.False(t, ok)
+
+		lTime = time.Date(2022, time.June, 7, 11, 42, 0, 0, time.Local) // + 32 минуты, вне диапазона
+		lUsr.AddAchieve(lTime, 5, logCh)
+
+		_, ok = lUsr.CurrentAchieves[6]
+		_, okT := lUsr.TempAchieves[6]
+		require.False(t, ok)
+		require.False(t, okT) //должна быть удалена из временных ачив
+
+		//fmt.Println("__________________ CURRENT USER ACHIEVES: \n", lUsr.CurrentAchieves)
+		//fmt.Println("__________________ TEMP USER ACHIEVES: \n", lUsr.TempAchieves)
+
+		//lTime = time.Date(2022, time.June, 7, 11, 11, 0, 0, time.Local)
+		//lUsr.AddAchieve(lTime, 3, logCh)
 	})
 }
 
