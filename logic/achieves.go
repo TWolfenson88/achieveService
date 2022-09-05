@@ -38,6 +38,10 @@ type UserAchieve struct {
 	ScannedLocations []int
 }
 
+func (u *UserAchieve) String() string {
+	return fmt.Sprintf("%#v \n", u)
+}
+
 type User struct {
 	Id              int
 	UsrLvl          int
@@ -46,12 +50,15 @@ type User struct {
 }
 
 func checkCooldown(lastScan, scanTime time.Time) bool {
+	if lastScan.IsZero() {
+		return true
+	}
 	return scanTime.Sub(lastScan) < (5 * time.Minute)
 }
 
 func (a *Achieve) checkConditions(usr *User, scanTime time.Time) bool {
 
-	fmt.Println("rere", usr)
+	fmt.Println("User checking conditions: ", usr)
 
 	ach, ok := usr.CurrentAchieves[a.Id]
 	if !ok {
@@ -66,39 +73,40 @@ func (a *Achieve) checkConditions(usr *User, scanTime time.Time) bool {
 		}
 	}
 
-	fmt.Println("фчива^ \n", a)
+	fmt.Println("Current achieves: ^ \n", a)
 
 	if !checkCooldown(ach.LastScan, scanTime) {
+		fmt.Println("Soo less cooldown, ", ach.LastScan, scanTime)
 		return false
 	}
 
 	if a.SpecialLogic == nil && a.NeedAchieves == nil {
-		fmt.Println("очень просто ")
+		fmt.Println("Added simple achievement ")
 		return true
 	} else if a.SpecialLogic == nil && a.NeedAchieves != nil {
-		fmt.Println("чуть сложнее")
+		fmt.Println("Achieve with dependances")
 		for _, elem := range a.NeedAchieves {
 			if uAch, ok := usr.CurrentAchieves[elem.NeedId]; !ok {
 				return false
 			} else if (time.Now().Sub(uAch.LastScan) > elem.Duration && elem.Duration != 0) || elem.NeedCount > uAch.ScanCount {
 				return false
 			} else {
-				fmt.Println("чуть сложнее2")
+				fmt.Println("Achieve with dependances and counts")
 				return true
 			}
 		}
 	} else if a.SpecialLogic != nil && a.NeedAchieves == nil {
-		fmt.Println("спешщл логик")
+		fmt.Println("Achieve with special logic")
 		return a.SpecialLogic(usr, a)
 	} else if a.SpecialLogic != nil && a.NeedAchieves != nil {
-		fmt.Println("довольно сложно")
+		fmt.Println("Achieve with special logic and dependancies")
 		for _, elem := range a.NeedAchieves {
 			if uAch, ok := usr.CurrentAchieves[elem.NeedId]; !ok {
 				return false
 			} else if (time.Now().Sub(uAch.LastScan) > elem.Duration && elem.Duration != 0) || elem.NeedCount > uAch.ScanCount {
 				return false
 			} else {
-				fmt.Println("спешщл логик")
+				fmt.Println("Checking special logic")
 				return a.SpecialLogic(usr, a)
 			}
 		}
@@ -154,10 +162,10 @@ func (u *User) AddAchieve(scanTime time.Time, locId int, logCh chan string) {
 
 	achieves = append(achieves, achList[0]...) // вот тут к проверяемому массиву аппенжу все общие ачивы
 
-	fmt.Println("ach arr len ", len(achieves))
+	fmt.Println("Achieves number to check:  ", len(achieves))
 
 	for _, achieve := range achieves {
-		fmt.Println("re", achieve.Id)
+		fmt.Println("Checking achieve ", achieve.Id)
 		if isScanInInterval(achieve, scanTime) && achieve.checkConditions(u, scanTime) {
 			fmt.Println("KEKE")
 			uAch := convertToUserAchieve(achieve)
@@ -173,7 +181,7 @@ func (u *User) AddAchieve(scanTime time.Time, locId int, logCh chan string) {
 				logCh <- fmt.Sprintf("%d получил ачивку %s", u.Id, tempUsrAch.Name)
 
 			} else if ok && achieve.ScansCountForLvl != nil {
-				fmt.Println("TEMP PLUSPLUS ")
+				fmt.Println("Increasing achieve scan count ")
 				tempUsrAch.ScanCount++
 			} else {
 				fmt.Println("ELSE")
