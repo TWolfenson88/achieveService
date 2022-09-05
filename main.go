@@ -15,7 +15,7 @@ import (
 type Users map[int]*logic.User
 
 type HandlerAchieves struct {
-	AchieveId	int `json:"achieve_id"`
+	AchieveId    int    `json:"achieve_id"`
 	AchieveName  string `json:"achieve_name"`
 	CurrentLevel int    `json:"current_level"`
 	MaxLevel     int    `json:"max_level"`
@@ -49,7 +49,8 @@ func findLastAchieves(user *logic.User) []string {
 	result := []string{}
 
 	for _, achieve := range user.CurrentAchieves {
-		//fmt.Println("SUB TIME ", time.Now().Sub(achieve.LastScan))
+		fmt.Println("SUB TIME ", time.Now().Sub(achieve.LastScan))
+		fmt.Println("CUR TIME ", time.Now())
 
 		if time.Now().Sub(achieve.LastScan) < 1*time.Minute {
 			result = append(result, achieve.Name)
@@ -94,7 +95,7 @@ func (u Users) handleAchieveInfo(w http.ResponseWriter, r *http.Request) {
 
 	for _, achieve := range user.CurrentAchieves {
 		hAch := HandlerAchieves{
-			AchieveId: achieve.AchieveId,
+			AchieveId:    achieve.AchieveId,
 			AchieveName:  achieve.Name,
 			CurrentLevel: achieve.AchieveLvl,
 			MaxLevel:     achieve.MaxLvl,
@@ -134,11 +135,10 @@ func SendLogs(ch chan string) {
 				fmt.Println(")))")
 			}
 
-                        q := req.URL.Query()
+			q := req.URL.Query()
 			q.Add("log_message", rslt)
-			q.Add("secret", "PosholNahuySuka") 
-                        req.URL.RawQuery = q.Encode()
-                        fmt.Println(req.URL.String())
+			q.Add("secret", "PosholNahuySuka")
+			req.URL.RawQuery = q.Encode()
 
 			_, err = client.Do(req)
 			if err != nil {
