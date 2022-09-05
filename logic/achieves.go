@@ -178,7 +178,7 @@ func (u *User) AddAchieve(scanTime time.Time, locId int, logCh chan string) {
 				tempUsrAch.AchieveLvl++
 				u.CurrentAchieves[tempUsrAch.AchieveId] = tempUsrAch
 
-				logCh <- fmt.Sprintf("%d получил ачивку %s", u.Id, tempUsrAch.Name)
+				logCh <- fmt.Sprintf("%d получил ачивку %s уровня %s", u.Id, tempUsrAch.Name, tempUsrAch.AchieveLvl)
 
 			} else if ok && achieve.ScansCountForLvl != nil {
 				fmt.Println("Increasing achieve scan count ")
