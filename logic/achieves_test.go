@@ -19,7 +19,7 @@ func TestUser_AddAchieve(t *testing.T) {
 		CurrentAchieves: map[int]*UserAchieve{},
 	}
 
-	logCh := make(chan string, 8)
+	logCh := make(chan string, 20)
 
 	t.Run("Just some add", func(t *testing.T) {
 
@@ -59,25 +59,23 @@ func TestUser_AddAchieve(t *testing.T) {
 		usr.AddAchieve(time.Date(2022, time.June, 7, 7, 1, 0, 0, time.Local), 7, logCh)
 		fmt.Println("Added bar one time ", usr.TempAchieves[71].AchieveLvl)
 		for count := 1; count < 6; count++ {
-			usr.AddAchieve(time.Date(2022, time.June, 7, 7, 10+5*count, 0, 0, time.Local), 7, logCh)
-			fmt.Println("Scan count: ", usr.TempAchieves[71].ScanCount)
+			l_time := time.Date(2022, time.June, 7, 7, 10+5*count, 0, 0, time.Local)
+			usr.AddAchieve(l_time, 7, logCh)
 		}
-		fmt.Println("Added bar six times ", usr.TempAchieves[71])
+		//TODO Here we need check, that user not have achievement
 
 		usr.AddAchieve(time.Date(2022, time.June, 7, 8, 1, 0, 0, time.Local), 7, logCh)
-
-		fmt.Println(usr.CurrentAchieves[71])
-
-		for count := 1; count < 9; count++ {
+		// we get lvl1
+		for count := 1; count < 8; count++ {
 			usr.AddAchieve(time.Date(2022, time.June, 7, 8, 10+5*count, 0, 0, time.Local), 7, logCh)
-			fmt.Println("Scan count: ", usr.TempAchieves[71].ScanCount, usr.CurrentAchieves[71].ScanCount)
 		}
-		fmt.Println(usr.CurrentAchieves[71], usr.TempAchieves[71])
+		// lvl2
 
-		for count := 1; count < 9; count++ {
+		for count := 1; count < 8; count++ {
 			usr.AddAchieve(time.Date(2022, time.June, 7, 9, 10+5*count, 0, 0, time.Local), 7, logCh)
 			fmt.Println("Scan count: ", usr.TempAchieves[71].ScanCount, usr.CurrentAchieves[71].ScanCount)
 		}
+		// lvl3
 		fmt.Println(usr.CurrentAchieves[71], usr.TempAchieves[71])
 	})
 
