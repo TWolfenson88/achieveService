@@ -108,7 +108,7 @@ func StreamListener(rc *redis.Client, users map[int]*logic.User, pg db.Saver, lo
 
 					usr := &logic.User{
 						Id:              userId,
-						UsrLvl:          0,
+						UsrLvl:          1,
 						TempAchieves:    map[int]*logic.UserAchieve{},
 						CurrentAchieves: map[int]*logic.UserAchieve{},
 					}
