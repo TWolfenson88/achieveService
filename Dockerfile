@@ -1,5 +1,7 @@
 FROM golang:1.17-alpine
 
+ENV TZ="Europe/Moscow"
+
 WORKDIR /app
 
 COPY . ./
