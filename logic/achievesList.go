@@ -772,7 +772,7 @@ var achList = AchieveList{
 			Id:               91,
 			IdLoc:            9,
 			MaxLevel:         3,
-			BeginLevel:       0,
+			BeginLevel:       1,
 			ScansCountForLvl: map[int]int{1: 1, 2: 4, 3: 7},
 			NameForLvl:       map[int]string{1: "Фанат", 2: "Коллекционер", 3: "Художник"},
 			PeriodStart:      time.Time{},

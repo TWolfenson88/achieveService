@@ -319,6 +319,37 @@ func TestUser_AddAchieve(t *testing.T) {
 		//_, ok = lUsr.TempAchieves[131]
 		//require.False(t, ok)
 	})
+	
+	t.Run("checking 91 achieve", func(t *testing.T) {
+		lUsr := &User{
+			Id:              3,
+			UsrLvl:          0,
+			TempAchieves:    map[int]*UserAchieve{},
+			CurrentAchieves: map[int]*UserAchieve{},
+		}
+		lTime := time.Date(2022, time.June, 7, 11, 10, 0, 0, time.Local)
+
+		lUsr.AddAchieve(lTime, 9, logCh)
+
+		fmt.Println("---- temp achieves ----", lUsr.TempAchieves)
+		fmt.Println("---- curr achieves ----", lUsr.CurrentAchieves)
+
+
+
+		_, ok := lUsr.CurrentAchieves[91]
+		require.True(t, ok)
+
+		lUsr.AddAchieve(lTime, 9, logCh)
+
+		fmt.Println("---- temp achieves ----", lUsr.TempAchieves)
+		fmt.Println("---- curr achieves ----", lUsr.CurrentAchieves)
+
+
+
+		_, ok = lUsr.CurrentAchieves[91]
+		require.True(t, ok)
+
+	})
 
 }
 
