@@ -176,6 +176,7 @@ func (u *User) AddAchieve(scanTime time.Time, locId int, logCh chan string) {
 				tempUsrAch.Name = achieve.NameForLvl[tempUsrAch.AchieveLvl+1]
 				tempUsrAch.ScanCount++
 				tempUsrAch.AchieveLvl++
+				tempUsrAch.LastScan = scanTime
 
 				chac, okok := u.CurrentAchieves[uAch.AchieveId]
 
@@ -200,12 +201,18 @@ func (u *User) AddAchieve(scanTime time.Time, locId int, logCh chan string) {
 					fmt.Println("ACHIEVE: ", uAch, "\n", "USER: ", u.CurrentAchieves)
 
 					if !okok {
+
+						uAch.LastScan = scanTime
+
 						u.CurrentAchieves[uAch.AchieveId] = &uAch
 
 						logCh <- fmt.Sprintf("%d получил ачивку %s", u.Id, uAch.Name)
 					}
 
 				} else {
+
+					uAch.LastScan = scanTime
+
 					u.TempAchieves[uAch.AchieveId] = &uAch
 				}
 			}
