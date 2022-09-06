@@ -429,6 +429,15 @@ var achList = AchieveList{
 					logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", usr.Id, usrAch.Name, usrAch.AchieveLvl)
 					usr.CurrentAchieves[31] = usrAch // и добавляем её если всё збс
 
+					_, one := usr.CurrentAchieves[31]
+					_, two := usr.CurrentAchieves[41]
+					_, swn := usr.CurrentAchieves[72]
+					_, nine := usr.CurrentAchieves[92]
+
+					if one && two && swn && nine && usr.UsrLvl == 2 {
+						usr.UsrLvl = 3
+					}
+
 				}
 
 				return false
@@ -518,6 +527,15 @@ var achList = AchieveList{
 
 					logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", usr.Id, usrAch.Name, usrAch.AchieveLvl)
 					usr.CurrentAchieves[41] = usrAch // и добавляем её если всё збс
+
+					_, one := usr.CurrentAchieves[31]
+					_, two := usr.CurrentAchieves[41]
+					_, swn := usr.CurrentAchieves[72]
+					_, nine := usr.CurrentAchieves[92]
+
+					if one && two && swn && nine && usr.UsrLvl == 2 {
+						usr.UsrLvl = 3
+					}
 
 				}
 
@@ -773,6 +791,15 @@ var achList = AchieveList{
 
 					logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", usr.Id, usrAch.Name, usrAch.AchieveLvl)
 					usr.CurrentAchieves[72] = usrAch // и добавляем её если всё збс
+
+					_, one := usr.CurrentAchieves[31]
+					_, two := usr.CurrentAchieves[41]
+					_, swn := usr.CurrentAchieves[72]
+					_, nine := usr.CurrentAchieves[92]
+
+					if one && two && swn && nine && usr.UsrLvl == 2 {
+						usr.UsrLvl = 3
+					}
 
 				}
 
@@ -1105,7 +1132,17 @@ var achList = AchieveList{
 					}
 
 					logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", usr.Id, usrAch.Name, usrAch.AchieveLvl)
+
 					usr.CurrentAchieves[92] = usrAch // и добавляем её если всё збс
+
+					_, one := usr.CurrentAchieves[31]
+					_, two := usr.CurrentAchieves[41]
+					_, swn := usr.CurrentAchieves[72]
+					_, nine := usr.CurrentAchieves[92]
+
+					if one && two && swn && nine && usr.UsrLvl == 2 {
+						usr.UsrLvl = 3
+					}
 
 				}
 
