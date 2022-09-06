@@ -245,16 +245,13 @@ var achList = AchieveList{
 					return false
 				}
 
-
 				if usr.UsrLvl != 2 {
 					return false
 				}
 
-
 				if _, okok := usr.CurrentAchieves[31]; okok {
 					return false
 				}
-
 
 				_, twok := usr.TempAchieves[83] //проверяем, есть ли отсканированные другие ачивы
 				_, eOk := usr.TempAchieves[131]
@@ -663,20 +660,6 @@ var achList = AchieveList{
 			NeedLocations:    nil,
 		},
 		{
-			Id:               82,
-			IdLoc:            8,
-			MaxLevel:         1,
-			BeginLevel:       1,
-			ScansCountForLvl: nil,
-			NameForLvl:       map[int]string{1: "Эпичный ужинарь"},
-			PeriodStart:      time.Time{}.Add(19 * time.Hour),
-			PeriodEnd:        time.Time{}.Add(20*time.Hour + 30*time.Minute),
-			Cooldown:         0,
-			NeedAchieves:     nil,
-			NeedLocations:    nil,
-		},
-
-		{
 			Id:               83,
 			IdLoc:            8,
 			MaxLevel:         1,
@@ -689,24 +672,22 @@ var achList = AchieveList{
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
 			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
-			/*	_, nineOk := usr.CurrentAchieves[92]
-				_, fourOk := usr.CurrentAchieves[41]
-				_, sevenOk := usr.CurrentAchieves[72]
-				_, threeOk := usr.CurrentAchieves[31]
+				/*	_, nineOk := usr.CurrentAchieves[92]
+					_, fourOk := usr.CurrentAchieves[41]
+					_, sevenOk := usr.CurrentAchieves[72]
+					_, threeOk := usr.CurrentAchieves[31]
 
-				if nineOk || fourOk || sevenOk || threeOk { //Если у нас получена какая-либо из финишных ачивок 13-9, 13-4, 2-3, 8-7, то не засчитываем это
-					return false
-				}*/
+					if nineOk || fourOk || sevenOk || threeOk { //Если у нас получена какая-либо из финишных ачивок 13-9, 13-4, 2-3, 8-7, то не засчитываем это
+						return false
+					}*/
 
 				if usr.UsrLvl != 2 {
 					return false
 				}
 
-
 				if _, okok := usr.CurrentAchieves[72]; okok {
 					return false
 				}
-
 
 				_, twok := usr.TempAchieves[21] //проверяем, есть ли отсканированные другие ачивы
 				_, eOk := usr.TempAchieves[131]
@@ -718,8 +699,6 @@ var achList = AchieveList{
 				if eOk {
 					delete(usr.TempAchieves, 131)
 				}
-
-
 
 				// тут, наверное, ничего
 
@@ -765,6 +744,19 @@ var achList = AchieveList{
 				}
 				return false
 			},
+		},
+		{
+			Id:               85,
+			IdLoc:            8,
+			MaxLevel:         1,
+			BeginLevel:       1,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "Эпичный ужинарь"},
+			PeriodStart:      time.Time{}.Add(19 * time.Hour),
+			PeriodEnd:        time.Time{}.Add(20*time.Hour + 30*time.Minute),
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
 		},
 	},
 	9: []Achieve{
@@ -891,15 +883,15 @@ var achList = AchieveList{
 			NeedLocations:    nil,
 			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
 
-			/*	_, nineOk := usr.CurrentAchieves[92]
-				_, fourOk := usr.CurrentAchieves[41]
-				_, sevenOk := usr.CurrentAchieves[72]
-				_, threeOk := usr.CurrentAchieves[31]
+				/*	_, nineOk := usr.CurrentAchieves[92]
+					_, fourOk := usr.CurrentAchieves[41]
+					_, sevenOk := usr.CurrentAchieves[72]
+					_, threeOk := usr.CurrentAchieves[31]
 
-				if nineOk || fourOk || sevenOk || threeOk { //Если у нас получена какая-либо из финишных ачивок 13-9, 13-4, 2-3, 8-7, то не засчитываем это
-					return false
-				}
-*/
+					if nineOk || fourOk || sevenOk || threeOk { //Если у нас получена какая-либо из финишных ачивок 13-9, 13-4, 2-3, 8-7, то не засчитываем это
+						return false
+					}
+				*/
 
 				if usr.UsrLvl != 2 {
 					return false
@@ -908,10 +900,9 @@ var achList = AchieveList{
 				_, okok := usr.CurrentAchieves[92]
 				_, okokk := usr.CurrentAchieves[41]
 
-				if  okokk && okok {
+				if okokk && okok {
 					return false
 				}
-
 
 				_, twok := usr.TempAchieves[21] //проверяем, есть ли отсканированные другие ачивы
 				_, eOk := usr.TempAchieves[83]
