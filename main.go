@@ -52,7 +52,7 @@ func findLastAchieves(user *logic.User) []string {
 		fmt.Println("SUB TIME ", time.Now().Sub(achieve.LastScan))
 		fmt.Println("CUR TIME ", time.Now())
 
-		if time.Now().Sub(achieve.LastScan) < 1*time.Minute {
+		if time.Now().Local().Sub(achieve.LastScan) < 1*time.Minute {
 			result = append(result, achieve.Name)
 		}
 	}

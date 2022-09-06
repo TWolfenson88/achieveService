@@ -186,6 +186,14 @@ func (u *User) AddAchieve(scanTime time.Time, locId int, logCh chan string) {
 
 				u.CurrentAchieves[tempUsrAch.AchieveId] = tempUsrAch
 
+				_, tOk := u.CurrentAchieves[3]
+				_, sOk := u.CurrentAchieves[6]
+				_, noOk := u.CurrentAchieves[91]
+
+				if tOk && sOk && noOk {
+					u.UsrLvl = 2
+				}
+
 				logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", u.Id, tempUsrAch.Name, tempUsrAch.AchieveLvl)
 
 			} else if ok && achieve.ScansCountForLvl != nil {
@@ -205,6 +213,23 @@ func (u *User) AddAchieve(scanTime time.Time, locId int, logCh chan string) {
 						uAch.LastScan = scanTime
 
 						u.CurrentAchieves[uAch.AchieveId] = &uAch
+
+						_, tOk := u.CurrentAchieves[3]
+						_, sOk := u.CurrentAchieves[6]
+						_, noOk := u.CurrentAchieves[91]
+
+						if tOk && sOk && noOk && u.UsrLvl == 1 {
+							u.UsrLvl = 2
+						}
+
+						_, one := u.CurrentAchieves[31]
+						_, two := u.CurrentAchieves[41]
+						_, swn := u.CurrentAchieves[72]
+						_, nine := u.CurrentAchieves[92]
+
+						if one && two && swn && nine && u.UsrLvl == 2 {
+							u.UsrLvl = 3
+						}
 
 						logCh <- fmt.Sprintf("%d получил ачивку %s", u.Id, uAch.Name)
 					}

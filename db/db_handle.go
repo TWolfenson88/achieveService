@@ -118,6 +118,17 @@ func (p *postgre) InitUserData() map[int]*logic.User {
 				scannedLocs = ""
 			}
 
+			location, err := time.LoadLocation("Europe/Moscow")
+			if err != nil {
+				log.Println("cant load MSK location", err)
+			}
+
+			achieve.LastScan = achieve.LastScan.Add(-3 * time.Hour) // or whatever offset makes it work
+
+			// t is now correct utc time
+			// In should work less badly:
+			achieve.LastScan = achieve.LastScan.In(location)
+
 			fmt.Println("RERERE", achieve)
 
 			fmt.Println("ach arr", scannedLocs)
@@ -234,6 +245,7 @@ func (p *postgre) SaveUserData(user logic.User) {
 		if err != nil {
 			log.Fatalln("achieve stmt exec err : ", err)
 		}
+
 	}
 
 	err = tx.Commit()
