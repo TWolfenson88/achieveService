@@ -103,6 +103,18 @@ func (u Users) handleAchieveInfo(w http.ResponseWriter, r *http.Request) {
 		hndlAchs = append(hndlAchs, hAch)
 	}
 
+	for _, achieve := range user.TempAchieves {
+		if achieve.AchieveId == 131 || achieve.AchieveId == 83 || achieve.AchieveId == 21 {
+			hAch := HandlerAchieves{
+				AchieveId:    achieve.AchieveId,
+				AchieveName:  achieve.Name,
+				CurrentLevel: achieve.AchieveLvl,
+				MaxLevel:     achieve.MaxLvl,
+			}
+			hndlAchs = append(hndlAchs, hAch)
+		}
+	}
+
 	usrInfo := &UserInfo{
 		UserLevel:          user.UsrLvl,
 		LastMinuteAchieves: findLastAchieves(user),
