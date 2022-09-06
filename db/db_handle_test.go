@@ -9,13 +9,16 @@ import (
 
 func TestPostgre_InitUserData(t *testing.T) {
 
-	conn, err := sqlx.Connect("pgx", "host='localhost' port=5432 user='AchUser' password='A4Pass' dbname='postgres' sslmode=disable")
-	if err != nil {
-		log.Println("db conn err: ", err) //таймауты покрасивее придумать как
-	}
+	t.Run("simple test", func(t *testing.T) {
+		conn, err := sqlx.Connect("pgx", "host='localhost' port=5432 user='AchUser' password='A4Pass' dbname='postgres' sslmode=disable")
+		if err != nil {
+			log.Println("db conn err: ", err) //таймауты покрасивее придумать как
+		}
 
-	bb := postgre{db: conn}
+		bb := postgre{db: conn}
 
-	result := bb.InitUserData()
-	fmt.Println("result! : ", result)
+		result := bb.InitUserData()
+		fmt.Println("result! : ", result)
+	})
+
 }

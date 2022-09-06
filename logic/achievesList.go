@@ -220,6 +220,139 @@ var achList = AchieveList{
 			},
 		},
 	},
+
+	2: []Achieve{
+		{
+			Id:               21,
+			IdLoc:            2,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "начало ачивки 2-3"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				_, nineOk := usr.CurrentAchieves[92]
+				_, fourOk := usr.CurrentAchieves[41]
+				_, sevenOk := usr.CurrentAchieves[72]
+				_, threeOk := usr.CurrentAchieves[31]
+
+				if nineOk || fourOk || sevenOk || threeOk { //Если у нас получена какая-либо из финишных ачивок 13-9, 13-4, 2-3, 8-7, то не засчитываем это
+					return false
+				}
+
+				// тут, наверное, ничего
+
+				return true
+			},
+		},
+	},
+
+	3: []Achieve{
+		{
+			Id:               31,
+			IdLoc:            3,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "конец ачивки 2-3"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				_, ok := usr.TempAchieves[21]
+
+				if ok {
+					_, twok := usr.TempAchieves[131] //проверяем, есть ли отсканированные другие ачивы
+					_, eOk := usr.TempAchieves[83]
+
+					if twok {
+						delete(usr.TempAchieves, 131) //и удаляем их прогресс, если есть
+					}
+
+					if eOk {
+						delete(usr.TempAchieves, 83)
+					}
+
+					delete(usr.TempAchieves, 21) //удаляем старт прогресса
+
+					usrAch := &UserAchieve{
+						AchieveId:        ach.Id,
+						AchieveLvl:       1,
+						MaxLvl:           1,
+						ScanCount:        1,
+						Name:             ach.NameForLvl[1],
+						LastScan:         scanTime,
+						ScannedLocations: nil,
+					}
+
+					logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", usr.Id, usrAch.Name, usrAch.AchieveLvl)
+					usr.CurrentAchieves[ach.Id] = usrAch // и добавляем её если всё збс
+
+				}
+
+				return false
+			},
+		},
+	},
+
+	4: []Achieve{
+		{
+			Id:               41,
+			IdLoc:            4,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "получена ачивка 13-4"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+				_, ok := usr.TempAchieves[131]
+
+				if ok {
+					_, twok := usr.TempAchieves[21] //проверяем, есть ли отсканированные другие ачивы
+					_, eOk := usr.TempAchieves[83]
+
+					if twok {
+						delete(usr.TempAchieves, 21) //и удаляем их прогресс, если есть
+					}
+
+					if eOk {
+						delete(usr.TempAchieves, 83)
+					}
+
+					delete(usr.TempAchieves, 131) //удаляем старт прогресса
+
+					usrAch := &UserAchieve{
+						AchieveId:        ach.Id,
+						AchieveLvl:       1,
+						MaxLvl:           1,
+						ScanCount:        1,
+						Name:             ach.NameForLvl[1],
+						LastScan:         scanTime,
+						ScannedLocations: nil,
+					}
+
+					logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", usr.Id, usrAch.Name, usrAch.AchieveLvl)
+					usr.CurrentAchieves[ach.Id] = usrAch // и добавляем её если всё збс
+
+				}
+
+				return false
+			},
+		},
+	},
+
 	7: []Achieve{ // дед бар
 		{
 			Id:               71,
@@ -233,6 +366,54 @@ var achList = AchieveList{
 			Cooldown:         0,
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
+		},
+
+		{
+			Id:               72,
+			IdLoc:            7,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "получена ачивка 13-4"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+				_, ok := usr.TempAchieves[83]
+
+				if ok {
+					_, twok := usr.TempAchieves[21] //проверяем, есть ли отсканированные другие ачивы
+					_, eOk := usr.TempAchieves[131]
+
+					if twok {
+						delete(usr.TempAchieves, 21) //и удаляем их прогресс, если есть
+					}
+
+					if eOk {
+						delete(usr.TempAchieves, 131)
+					}
+
+					delete(usr.TempAchieves, 72) //удаляем старт прогресса
+
+					usrAch := &UserAchieve{
+						AchieveId:        ach.Id,
+						AchieveLvl:       1,
+						MaxLvl:           1,
+						ScanCount:        1,
+						Name:             ach.NameForLvl[1],
+						LastScan:         scanTime,
+						ScannedLocations: nil,
+					}
+
+					logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", usr.Id, usrAch.Name, usrAch.AchieveLvl)
+					usr.CurrentAchieves[ach.Id] = usrAch // и добавляем её если всё збс
+
+				}
+
+				return false
+			},
 		},
 	},
 	8: []Achieve{
@@ -275,6 +456,34 @@ var achList = AchieveList{
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
 		},
+
+		{
+			Id:               83,
+			IdLoc:            8,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "получена ачивка 13-4"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+				_, nineOk := usr.CurrentAchieves[92]
+				_, fourOk := usr.CurrentAchieves[41]
+				_, sevenOk := usr.CurrentAchieves[72]
+				_, threeOk := usr.CurrentAchieves[31]
+
+				if nineOk || fourOk || sevenOk || threeOk { //Если у нас получена какая-либо из финишных ачивок 13-9, 13-4, 2-3, 8-7, то не засчитываем это
+					return false
+				}
+
+				// тут, наверное, ничего
+
+				return true
+			},
+		},
 	},
 	9: []Achieve{
 		{
@@ -289,6 +498,53 @@ var achList = AchieveList{
 			Cooldown:         0,
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
+		},
+		{
+			Id:               92,
+			IdLoc:            9,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "получена ачивка 13-9"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+				_, ok := usr.TempAchieves[131]
+
+				if ok {
+					_, twok := usr.TempAchieves[21] //проверяем, есть ли отсканированные другие ачивы
+					_, eOk := usr.TempAchieves[83]
+
+					if twok {
+						delete(usr.TempAchieves, 21) //и удаляем их прогресс, если есть
+					}
+
+					if eOk {
+						delete(usr.TempAchieves, 83)
+					}
+
+					delete(usr.TempAchieves, 131) //удаляем старт прогресса
+
+					usrAch := &UserAchieve{
+						AchieveId:        ach.Id,
+						AchieveLvl:       1,
+						MaxLvl:           1,
+						ScanCount:        1,
+						Name:             ach.NameForLvl[1],
+						LastScan:         scanTime,
+						ScannedLocations: nil,
+					}
+
+					logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", usr.Id, usrAch.Name, usrAch.AchieveLvl)
+					usr.CurrentAchieves[ach.Id] = usrAch // и добавляем её если всё збс
+
+				}
+
+				return false
+			},
 		},
 	},
 	10: []Achieve{
@@ -345,27 +601,27 @@ var achList = AchieveList{
 			MaxLevel:         1,
 			BeginLevel:       0,
 			ScansCountForLvl: nil,
-			NameForLvl:       map[int]string{1: "Ух ебать сложная ачивка зависимая 13-9"},
+			NameForLvl:       map[int]string{1: "Ух ебать сложная ачивка зависимая 13-9, 13-4"},
 			PeriodStart:      time.Time{},
 			PeriodEnd:        time.Time{},
 			Cooldown:         0,
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
-			SpecialLogic:     nil,
-		},
-		{
-			Id:               131,
-			IdLoc:            13,
-			MaxLevel:         1,
-			BeginLevel:       0,
-			ScansCountForLvl: nil,
-			NameForLvl:       map[int]string{1: "Ух ебать сложная ачивка зависимая 13-4"},
-			PeriodStart:      time.Time{},
-			PeriodEnd:        time.Time{},
-			Cooldown:         0,
-			NeedAchieves:     nil,
-			NeedLocations:    nil,
-			SpecialLogic:     nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				_, nineOk := usr.CurrentAchieves[92]
+				_, fourOk := usr.CurrentAchieves[41]
+				_, sevenOk := usr.CurrentAchieves[72]
+				_, threeOk := usr.CurrentAchieves[31]
+
+				if nineOk || fourOk || sevenOk || threeOk { //Если у нас получена какая-либо из финишных ачивок 13-9, 13-4, 2-3, 8-7, то не засчитываем это
+					return false
+				}
+
+				// тут, наверное, ничего
+
+				return true
+			},
 		},
 	},
 	14: []Achieve{

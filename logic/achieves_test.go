@@ -121,7 +121,7 @@ func TestUser_AddAchieve(t *testing.T) {
 	})
 
 	t.Run("check 2-3-4-5-6 achieve sucess", func(t *testing.T) {
-		//t.Skip()
+		t.Skip()
 
 		lUsr := &User{
 			Id:              3,
@@ -165,7 +165,7 @@ func TestUser_AddAchieve(t *testing.T) {
 	})
 
 	t.Run("check 2-3-4-5-6 achieve out of time", func(t *testing.T) {
-		//t.Skip()
+		t.Skip()
 
 		lUsr := &User{
 			Id:              3,
@@ -200,6 +200,60 @@ func TestUser_AddAchieve(t *testing.T) {
 		//lTime = time.Date(2022, time.June, 7, 11, 11, 0, 0, time.Local)
 		//lUsr.AddAchieve(lTime, 3, logCh)
 	})
+
+	t.Run("check 13-9 13-4 2-3 8-7 achieves logic", func(t *testing.T) {
+		//t.Skip()
+
+		//логика такая:
+		//скаинруем 13 локу, затем 2 локу, потом 9 локу. При скане 13 и 2 локи, у нас начинается прогресс по
+		// 13-4, 13-9 и 2-3 соответственно. И после скана 9 локи у нас зачисляется ачивка 13-9, остальные сбрасываются
+		//и больше никогда не доступны
+		lUsr := &User{
+			Id:              3,
+			UsrLvl:          0,
+			TempAchieves:    map[int]*UserAchieve{},
+			CurrentAchieves: map[int]*UserAchieve{},
+		}
+		lTime := time.Date(2022, time.June, 7, 11, 10, 0, 0, time.Local)
+
+		lUsr.AddAchieve(lTime, 13, logCh)
+		_, ok := lUsr.TempAchieves[131]
+		require.True(t, ok)
+
+		fmt.Println("---- temp achieves ----", lUsr.TempAchieves)
+		fmt.Println("---- curr achieves ----", lUsr.CurrentAchieves)
+
+		lTime = time.Date(2022, time.June, 7, 11, 11, 0, 0, time.Local)
+		lUsr.AddAchieve(lTime, 2, logCh)
+		_, ok = lUsr.TempAchieves[21]
+		require.True(t, ok)
+
+		fmt.Println("---- temp achieves ----", lUsr.TempAchieves)
+		fmt.Println("---- curr achieves ----", lUsr.CurrentAchieves)
+
+		lTime = time.Date(2022, time.June, 7, 11, 42, 0, 0, time.Local) // + 32 минуты, вне диапазона
+		lUsr.AddAchieve(lTime, 9, logCh)
+
+		_, ok = lUsr.CurrentAchieves[92]
+
+		_, threetenok := lUsr.TempAchieves[131]
+		_, twoOk := lUsr.TempAchieves[21]
+
+		//У нас в куррентах должна быть записана 92 ачивка, как конец последовательности 13-9, при этом 13 и 2 удалены
+		require.True(t, ok)
+		require.False(t, threetenok)
+		require.False(t, twoOk)
+
+		fmt.Println("---- temp achieves ----", lUsr.TempAchieves)
+		fmt.Println("---- curr achieves ----", lUsr.CurrentAchieves)
+
+		lTime = time.Date(2022, time.June, 7, 11, 42, 0, 0, time.Local) // + 32 минуты, вне диапазона
+		lUsr.AddAchieve(lTime, 13, logCh)
+
+		_, ok = lUsr.TempAchieves[131]
+		require.False(t, ok)
+	})
+
 }
 
 /*func BenchmarkAddAchieve(b *testing.B) {

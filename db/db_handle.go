@@ -50,11 +50,11 @@ func InitDB() Saver {
 	port, _ := strconv.Atoi(getEnv("POSTGRES_PORT", "5432")) //хуйня какая-то, потом покрасивее надо сделать
 
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		getEnv("POSTGRES_HOST", "postgres"),
+		getEnv("POSTGRES_HOST", "192.168.10.205"),
 		port,
-		getEnv("POSTGRES_USER", "postgres"),
-		getEnv("POSTGRES_PASS", "postgres"),
-		getEnv("POSTGRES_DB", "postgres"))
+		getEnv("POSTGRES_USER", "adminpsg"), //TODO: ПОМЕНЯТЬ НА ДЕФОЛТНЫЕ postgres-postgres-postgres ПЕРЕД РЕЛИЗОМ
+		getEnv("POSTGRES_PASS", "PadminSGG"),
+		getEnv("POSTGRES_DB", "server_gredit_db"))
 
 	db, err := sqlx.Connect("pgx", psqlInfo)
 	if err != nil {
@@ -117,6 +117,8 @@ func (p *postgre) InitUserData() map[int]*logic.User {
 			} else {
 				scannedLocs = ""
 			}
+
+			fmt.Println("RERERE", achieve)
 
 			fmt.Println("ach arr", scannedLocs)
 			if len(scannedLocs) > 0 {
