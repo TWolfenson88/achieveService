@@ -168,6 +168,7 @@ func achLogicToDB(achMap map[int]*logic.UserAchieve, uid int, fl bool) map[int]*
 			AchieveId:        achieve.AchieveId,
 			AchieveLvl:       achieve.AchieveLvl,
 			ScanCount:        achieve.ScanCount,
+			MaxLvl: 		  achieve.MaxLvl,
 			Name:             achieve.Name,
 			LastScan:         achieve.LastScan,
 			ScannedLocations: achieve.ScannedLocations,
