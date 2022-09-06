@@ -221,6 +221,43 @@ var achList = AchieveList{
 		},
 	},
 
+	1: []Achieve{
+		{
+			Id:               11,
+			IdLoc:            1,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 51 (дэвид)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 2, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[51]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 7 {
+						usr.TempAchieves[51] = &UserAchieve{
+							AchieveId:        51,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{5},
+						}
+					} else {
+						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[51].ScannedLocations = append(usr.TempAchieves[51].ScannedLocations, 1)
+					}
+				}
+				return false
+			},
+		},
+	},
+
 	2: []Achieve{
 		{
 			Id:               21,
@@ -275,12 +312,12 @@ var achList = AchieveList{
 			MaxLevel:         1,
 			BeginLevel:       0,
 			ScansCountForLvl: nil,
-			NameForLvl:       map[int]string{1: "путь маскота ЭРИК"},
+			NameForLvl:       map[int]string{1: "путь маскота МАКСВЕЛЛ"},
 			PeriodStart:      time.Time{},
 			PeriodEnd:        time.Time{},
 			Cooldown:         0,
 			NeedAchieves:     nil,
-			NeedLocations:    []int{2, 3, 4, 7, 8},
+			NeedLocations:    []int{2, 11, 9, 7, 4, 13},
 			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
 
 				//предположим нам необходимо пройти локации 2-3-4-7-8
@@ -307,6 +344,40 @@ var achList = AchieveList{
 					}
 				}
 
+				return false
+			},
+		},
+		{
+			Id:               23,
+			IdLoc:            2,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 42(эрика)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 3, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[42]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 6 {
+						usr.TempAchieves[42] = &UserAchieve{
+							AchieveId:        42,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{4},
+						}
+					} else {
+						//если последняя отсканеная лока 3, добавляем эту локу
+						usr.TempAchieves[42].ScannedLocations = append(usr.TempAchieves[42].ScannedLocations, 2)
+					}
+				}
 				return false
 			},
 		},
@@ -367,48 +438,37 @@ var achList = AchieveList{
 			MaxLevel:         1,
 			BeginLevel:       0,
 			ScansCountForLvl: nil,
-			NameForLvl:       map[int]string{1: "путь маскота ЙОЛК"},
+			NameForLvl:       map[int]string{1: "путь маскота РЕЙ"},
 			PeriodStart:      time.Time{},
 			PeriodEnd:        time.Time{},
 			Cooldown:         0,
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
 			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+				//предположим нам необходимо пройти локации 2-3-4-7-8
+				//сначала проверим, получена ли ачивка кого либо из других масокотов
 
-				return false
-			},
-		},
-		{
-			Id:               33,
-			IdLoc:            3,
-			MaxLevel:         1,
-			BeginLevel:       0,
-			ScansCountForLvl: nil,
-			NameForLvl:       map[int]string{1: "временная ачивка для 22"},
-			PeriodStart:      time.Time{},
-			PeriodEnd:        time.Time{},
-			Cooldown:         0,
-			NeedAchieves:     nil,
-			NeedLocations:    nil,
-			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+				_, eOk := usr.TempAchieves[22]
+				_, shOk := usr.TempAchieves[42]
+				_, grOk := usr.TempAchieves[51]
 
-				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 2, сбрасываем прогресс
-				if aciv, ok := usr.TempAchieves[22]; ok {
-					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 2 {
-						usr.TempAchieves[22] = &UserAchieve{
-							AchieveId:        22,
-							AchieveLvl:       0,
-							MaxLvl:           1,
-							ScanCount:        1,
-							Name:             "",
-							LastScan:         scanTime,
-							ScannedLocations: []int{2},
-						}
-					} else {
-						//если последняя отсканеная лока 2, добавляем эту локу
-						usr.TempAchieves[22].ScannedLocations = append(usr.TempAchieves[22].ScannedLocations, 3)
+				if eOk || shOk || grOk || usr.UsrLvl != 3 {
+					return false
+				}
+
+				//если у юзера нет 22 ачивы, добавляем. Если есть, ничо не делаем, путь выбран
+				if _, ok := usr.TempAchieves[32]; !ok {
+					usr.TempAchieves[32] = &UserAchieve{
+						AchieveId:        32,
+						AchieveLvl:       0,
+						MaxLvl:           1,
+						ScanCount:        1,
+						Name:             "",
+						LastScan:         scanTime,
+						ScannedLocations: []int{3},
 					}
 				}
+
 				return false
 			},
 		},
@@ -468,13 +528,36 @@ var achList = AchieveList{
 			MaxLevel:         1,
 			BeginLevel:       0,
 			ScansCountForLvl: nil,
-			NameForLvl:       map[int]string{1: "путь маскота ШП"},
+			NameForLvl:       map[int]string{1: "путь маскота ЭРИКА"},
 			PeriodStart:      time.Time{},
 			PeriodEnd:        time.Time{},
 			Cooldown:         0,
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
 			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+				//предположим нам необходимо пройти локации 2-3-4-7-8
+				//сначала проверим, получена ли ачивка кого либо из других масокотов
+
+				_, eOk := usr.TempAchieves[22]
+				_, shOk := usr.TempAchieves[32]
+				_, grOk := usr.TempAchieves[51]
+
+				if eOk || shOk || grOk || usr.UsrLvl != 3 {
+					return false
+				}
+
+				//если у юзера нет 22 ачивы, добавляем. Если есть, ничо не делаем, путь выбран
+				if _, ok := usr.TempAchieves[42]; !ok {
+					usr.TempAchieves[42] = &UserAchieve{
+						AchieveId:        42,
+						AchieveLvl:       0,
+						MaxLvl:           1,
+						ScanCount:        1,
+						Name:             "",
+						LastScan:         scanTime,
+						ScannedLocations: []int{4},
+					}
+				}
 
 				return false
 			},
@@ -485,7 +568,7 @@ var achList = AchieveList{
 			MaxLevel:         1,
 			BeginLevel:       0,
 			ScansCountForLvl: nil,
-			NameForLvl:       map[int]string{1: "временная ачивка для 22"},
+			NameForLvl:       map[int]string{1: "временная ачивка для 2(максвелл)"},
 			PeriodStart:      time.Time{},
 			PeriodEnd:        time.Time{},
 			Cooldown:         0,
@@ -495,7 +578,7 @@ var achList = AchieveList{
 
 				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 3, сбрасываем прогресс
 				if aciv, ok := usr.TempAchieves[22]; ok {
-					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 3 {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 7 {
 						usr.TempAchieves[22] = &UserAchieve{
 							AchieveId:        22,
 							AchieveLvl:       0,
@@ -522,7 +605,47 @@ var achList = AchieveList{
 			MaxLevel:         1,
 			BeginLevel:       0,
 			ScansCountForLvl: nil,
-			NameForLvl:       map[int]string{1: "путь маскота ГРИНЧ"},
+			NameForLvl:       map[int]string{1: "путь маскота ДЭВИД"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+				//предположим нам необходимо пройти локации 2-3-4-7-8
+				//сначала проверим, получена ли ачивка кого либо из других масокотов
+
+				_, eOk := usr.TempAchieves[22]
+				_, shOk := usr.TempAchieves[32]
+				_, grOk := usr.TempAchieves[42]
+
+				if eOk || shOk || grOk || usr.UsrLvl != 3 {
+					return false
+				}
+
+				//если у юзера нет 22 ачивы, добавляем. Если есть, ничо не делаем, путь выбран
+				if _, ok := usr.TempAchieves[51]; !ok {
+					usr.TempAchieves[51] = &UserAchieve{
+						AchieveId:        51,
+						AchieveLvl:       0,
+						MaxLvl:           1,
+						ScanCount:        1,
+						Name:             "",
+						LastScan:         scanTime,
+						ScannedLocations: []int{5},
+					}
+				}
+
+				return false
+			},
+		},
+		{
+			Id:               52,
+			IdLoc:            5,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 32 (рей)"},
 			PeriodStart:      time.Time{},
 			PeriodEnd:        time.Time{},
 			Cooldown:         0,
@@ -530,6 +653,60 @@ var achList = AchieveList{
 			NeedLocations:    nil,
 			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
 
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 2, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[32]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 8 {
+						usr.TempAchieves[32] = &UserAchieve{
+							AchieveId:        32,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{3},
+						}
+					} else {
+						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[32].ScannedLocations = append(usr.TempAchieves[32].ScannedLocations, 5)
+					}
+				}
+				return false
+			},
+		},
+	},
+
+	6: []Achieve{
+		{
+			Id:               61,
+			IdLoc:            6,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 42(эрика)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 3, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[42]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 4 {
+						usr.TempAchieves[42] = &UserAchieve{
+							AchieveId:        42,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{4},
+						}
+					} else {
+						//если последняя отсканеная лока 3, добавляем эту локу
+						usr.TempAchieves[42].ScannedLocations = append(usr.TempAchieves[42].ScannedLocations, 6)
+					}
+				}
 				return false
 			},
 		},
@@ -613,7 +790,7 @@ var achList = AchieveList{
 
 				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 4, сбрасываем прогресс
 				if aciv, ok := usr.TempAchieves[22]; ok {
-					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 4 {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 9 {
 						usr.TempAchieves[22] = &UserAchieve{
 							AchieveId:        22,
 							AchieveLvl:       0,
@@ -626,6 +803,40 @@ var achList = AchieveList{
 					} else {
 						//если последняя отсканеная лока 3, добавляем эту локу
 						usr.TempAchieves[22].ScannedLocations = append(usr.TempAchieves[22].ScannedLocations, 7)
+					}
+				}
+				return false
+			},
+		},
+		{
+			Id:               74,
+			IdLoc:            7,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 51 (дэвид)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 2, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[51]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 5 {
+						usr.TempAchieves[51] = &UserAchieve{
+							AchieveId:        51,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{5},
+						}
+					} else {
+						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[51].ScannedLocations = append(usr.TempAchieves[51].ScannedLocations, 7)
 					}
 				}
 				return false
@@ -706,46 +917,6 @@ var achList = AchieveList{
 			},
 		},
 		{
-			Id:               84,
-			IdLoc:            8,
-			MaxLevel:         1,
-			BeginLevel:       0,
-			ScansCountForLvl: nil,
-			NameForLvl:       map[int]string{1: "временная ачивка для 22"},
-			PeriodStart:      time.Time{},
-			PeriodEnd:        time.Time{},
-			Cooldown:         0,
-			NeedAchieves:     nil,
-			NeedLocations:    nil,
-			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
-
-				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 7, сбрасываем прогресс
-				if aciv, ok := usr.TempAchieves[22]; ok {
-					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 7 {
-						usr.TempAchieves[22] = &UserAchieve{
-							AchieveId:        22,
-							AchieveLvl:       0,
-							MaxLvl:           1,
-							ScanCount:        1,
-							Name:             "",
-							LastScan:         scanTime,
-							ScannedLocations: []int{2},
-						}
-					} else {
-						//если последняя отсканеная лока 7, последний этап, записываем 22 ачивку в полученные, круто!
-						usr.TempAchieves[22].ScannedLocations = append(usr.TempAchieves[22].ScannedLocations, 8)
-
-						aciv.LastScan = scanTime
-						aciv.AchieveLvl = 1
-						aciv.Name = "ПУТЬ ЭРИКА ПРОЙДЕН ЕБАТЬ "
-
-						usr.CurrentAchieves[22] = aciv
-					}
-				}
-				return false
-			},
-		},
-		{
 			Id:               85,
 			IdLoc:            8,
 			MaxLevel:         1,
@@ -758,14 +929,116 @@ var achList = AchieveList{
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
 		},
+		{
+			Id:               86,
+			IdLoc:            8,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 32 (рей)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 2, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[32]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 10 {
+						usr.TempAchieves[32] = &UserAchieve{
+							AchieveId:        32,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{3},
+						}
+					} else {
+						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[32].ScannedLocations = append(usr.TempAchieves[32].ScannedLocations, 8)
+					}
+				}
+				return false
+			},
+		},
+		{
+			Id:               87,
+			IdLoc:            8,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 42(эрика)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 3, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[42]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 2 {
+						usr.TempAchieves[42] = &UserAchieve{
+							AchieveId:        42,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{4},
+						}
+					} else {
+						//если последняя отсканеная лока 3, добавляем эту локу
+						usr.TempAchieves[42].ScannedLocations = append(usr.TempAchieves[42].ScannedLocations, 8)
+					}
+				}
+				return false
+			},
+		},
+		{
+			Id:               88,
+			IdLoc:            8,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 51 (дэвид)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 2, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[51]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 7 {
+						usr.TempAchieves[51] = &UserAchieve{
+							AchieveId:        51,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{5},
+						}
+					} else {
+						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[51].ScannedLocations = append(usr.TempAchieves[51].ScannedLocations, 8)
+					}
+				}
+				return false
+			},
+		},
 	},
 	9: []Achieve{
 		{
 			Id:               91,
 			IdLoc:            9,
 			MaxLevel:         3,
-			BeginLevel:       1,
-			ScansCountForLvl: map[int]int{1: 1, 2: 4, 3: 7},
+			BeginLevel:       0,
+			ScansCountForLvl: map[int]int{1: 2, 2: 4, 3: 7},
 			NameForLvl:       map[int]string{1: "Фанат", 2: "Коллекционер", 3: "Художник"},
 			PeriodStart:      time.Time{},
 			PeriodEnd:        time.Time{},
@@ -820,6 +1093,74 @@ var achList = AchieveList{
 				return false
 			},
 		},
+		{
+			Id:               93,
+			IdLoc:            9,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 22 (максвелл)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 2, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[22]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 11 {
+						usr.TempAchieves[22] = &UserAchieve{
+							AchieveId:        22,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{2},
+						}
+					} else {
+						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[22].ScannedLocations = append(usr.TempAchieves[22].ScannedLocations, 9)
+					}
+				}
+				return false
+			},
+		},
+		{
+			Id:               94,
+			IdLoc:            9,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 32 (рей)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 2, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[32]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 3 {
+						usr.TempAchieves[32] = &UserAchieve{
+							AchieveId:        32,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{3},
+						}
+					} else {
+						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[32].ScannedLocations = append(usr.TempAchieves[32].ScannedLocations, 9)
+					}
+				}
+				return false
+			},
+		},
 	},
 	10: []Achieve{
 		{
@@ -834,6 +1175,74 @@ var achList = AchieveList{
 			Cooldown:         0,
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
+		},
+		{
+			Id:               102,
+			IdLoc:            10,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 32 (рей)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 2, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[32]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 9 {
+						usr.TempAchieves[32] = &UserAchieve{
+							AchieveId:        32,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{3},
+						}
+					} else {
+						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[32].ScannedLocations = append(usr.TempAchieves[32].ScannedLocations, 10)
+					}
+				}
+				return false
+			},
+		},
+		{
+			Id:               103,
+			IdLoc:            10,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 51 (дэвид)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 2, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[51]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 1 {
+						usr.TempAchieves[51] = &UserAchieve{
+							AchieveId:        51,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{5},
+						}
+					} else {
+						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[51].ScannedLocations = append(usr.TempAchieves[51].ScannedLocations, 10)
+					}
+				}
+				return false
+			},
 		},
 	},
 	11: []Achieve{
@@ -850,6 +1259,74 @@ var achList = AchieveList{
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
 			SpecialLogic:     nil,
+		},
+		{
+			Id:               112,
+			IdLoc:            11,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 22 (максвелл)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 2, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[22]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 2 {
+						usr.TempAchieves[22] = &UserAchieve{
+							AchieveId:        22,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{2},
+						}
+					} else {
+						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[22].ScannedLocations = append(usr.TempAchieves[22].ScannedLocations, 11)
+					}
+				}
+				return false
+			},
+		},
+		{
+			Id:               113,
+			IdLoc:            11,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 42(эрика)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 3, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[42]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 8 {
+						usr.TempAchieves[42] = &UserAchieve{
+							AchieveId:        42,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{4},
+						}
+					} else {
+						//если последняя отсканеная лока 3, добавляем эту локу
+						usr.TempAchieves[42].ScannedLocations = append(usr.TempAchieves[42].ScannedLocations, 11)
+					}
+				}
+				return false
+			},
 		},
 	},
 	12: []Achieve{
@@ -918,6 +1395,166 @@ var achList = AchieveList{
 				// тут, наверное, ничего
 
 				return true
+			},
+		},
+		{
+			Id:               132,
+			IdLoc:            13,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 22 (максвел, последняя)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 7, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[22]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 4 {
+						usr.TempAchieves[22] = &UserAchieve{
+							AchieveId:        22,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{2},
+						}
+					} else {
+						//если последняя отсканеная лока 7, последний этап, записываем 22 ачивку в полученные, круто!
+						usr.TempAchieves[22].ScannedLocations = append(usr.TempAchieves[22].ScannedLocations, 13)
+
+						aciv.LastScan = scanTime
+						aciv.AchieveLvl = 1
+						aciv.Name = "ПУТЬ МАКСВЕЛЛА ПРОЙДЕН"
+
+						usr.CurrentAchieves[22] = aciv
+					}
+				}
+				return false
+			},
+		},
+		{
+			Id:               133,
+			IdLoc:            13,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 32 (рей, последняя)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 7, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[32]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 5 {
+						usr.TempAchieves[32] = &UserAchieve{
+							AchieveId:        32,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{3},
+						}
+					} else {
+						//если последняя отсканеная лока 7, последний этап, записываем 22 ачивку в полученные, круто!
+						usr.TempAchieves[32].ScannedLocations = append(usr.TempAchieves[32].ScannedLocations, 13)
+
+						aciv.LastScan = scanTime
+						aciv.AchieveLvl = 1
+						aciv.Name = "ПУТЬ РЕЯ ПРОЙДЕН"
+
+						usr.CurrentAchieves[32] = aciv
+					}
+				}
+				return false
+			},
+		},
+		{
+			Id:               134,
+			IdLoc:            13,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 42 (эрика', последняя)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 7, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[42]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 11 {
+						usr.TempAchieves[42] = &UserAchieve{
+							AchieveId:        42,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{4},
+						}
+					} else {
+						//если последняя отсканеная лока 7, последний этап, записываем 22 ачивку в полученные, круто!
+						usr.TempAchieves[42].ScannedLocations = append(usr.TempAchieves[42].ScannedLocations, 13)
+
+						aciv.LastScan = scanTime
+						aciv.AchieveLvl = 1
+						aciv.Name = "ПУТЬ эрики ПРОЙДЕН"
+
+						usr.CurrentAchieves[42] = aciv
+					}
+				}
+				return false
+			},
+		},
+		{
+			Id:               135,
+			IdLoc:            13,
+			MaxLevel:         1,
+			BeginLevel:       0,
+			ScansCountForLvl: nil,
+			NameForLvl:       map[int]string{1: "временная ачивка для 42 (дэвид', последняя)"},
+			PeriodStart:      time.Time{},
+			PeriodEnd:        time.Time{},
+			Cooldown:         0,
+			NeedAchieves:     nil,
+			NeedLocations:    nil,
+			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
+
+				//проверяем, есть ли у юзера ачивка 22, и если последняя отсканеная лока не 7, сбрасываем прогресс
+				if aciv, ok := usr.TempAchieves[51]; ok {
+					if aciv.ScannedLocations[len(aciv.ScannedLocations)-1] != 10 {
+						usr.TempAchieves[51] = &UserAchieve{
+							AchieveId:        51,
+							AchieveLvl:       0,
+							MaxLvl:           1,
+							ScanCount:        1,
+							Name:             "",
+							LastScan:         scanTime,
+							ScannedLocations: []int{5},
+						}
+					} else {
+						//если последняя отсканеная лока 7, последний этап, записываем 22 ачивку в полученные, круто!
+						usr.TempAchieves[51].ScannedLocations = append(usr.TempAchieves[51].ScannedLocations, 51)
+
+						aciv.LastScan = scanTime
+						aciv.AchieveLvl = 1
+						aciv.Name = "ПУТЬ ДЭВИДА ПРОЙДЕН"
+
+						usr.CurrentAchieves[42] = aciv
+					}
+				}
+				return false
 			},
 		},
 	},

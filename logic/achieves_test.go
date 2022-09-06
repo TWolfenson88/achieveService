@@ -256,52 +256,78 @@ func TestUser_AddAchieve(t *testing.T) {
 		//и больше никогда не доступны
 		lUsr := &User{
 			Id:              3,
-			UsrLvl:          0,
+			UsrLvl:          3,
 			TempAchieves:    map[int]*UserAchieve{},
 			CurrentAchieves: map[int]*UserAchieve{},
 		}
 		lTime := time.Date(2022, time.June, 7, 11, 10, 0, 0, time.Local)
 
 		lUsr.AddAchieve(lTime, 2, logCh)
-		_, ok := lUsr.TempAchieves[22]
-		require.True(t, ok)
+		//_, ok := lUsr.TempAchieves[22]
+		//require.True(t, ok)
 
 		fmt.Println("---- temp achieves ----", lUsr.TempAchieves)
 		fmt.Println("---- curr achieves ----", lUsr.CurrentAchieves)
 
 		lTime = time.Date(2022, time.June, 7, 11, 11, 0, 0, time.Local)
-		lUsr.AddAchieve(lTime, 3, logCh)
-		_, ok = lUsr.TempAchieves[22]
-		require.True(t, ok)
+		lUsr.AddAchieve(lTime, 11, logCh)
+		//_, ok = lUsr.TempAchieves[22]
+		//require.True(t, ok)
 
 		fmt.Println("---- temp achieves ----", lUsr.TempAchieves)
 		fmt.Println("---- curr achieves ----", lUsr.CurrentAchieves)
 
 		lTime = time.Date(2022, time.June, 7, 11, 11, 0, 0, time.Local)
 		lUsr.AddAchieve(lTime, 4, logCh)
-		_, ok = lUsr.TempAchieves[22]
-		require.True(t, ok)
+		//_, ok = lUsr.TempAchieves[22]
+		//require.True(t, ok)
+
+
+		fmt.Println("---- temp achieves ----", lUsr.TempAchieves)
+		fmt.Println("---- curr achieves ----", lUsr.CurrentAchieves)
+
+
+		lTime = time.Date(2022, time.June, 7, 11, 11, 0, 0, time.Local)
+		lUsr.AddAchieve(lTime, 11, logCh)
+		//_, ok = lUsr.TempAchieves[22]
+		//require.True(t, ok)
+
+		fmt.Println("---- temp achieves ----", lUsr.TempAchieves)
+		fmt.Println("---- curr achieves ----", lUsr.CurrentAchieves)
+
+		lTime = time.Date(2022, time.June, 7, 11, 11, 0, 0, time.Local)
+		lUsr.AddAchieve(lTime, 9, logCh)
+		//_, ok = lUsr.TempAchieves[22]
+		//require.True(t, ok)
 
 		fmt.Println("---- temp achieves ----", lUsr.TempAchieves)
 		fmt.Println("---- curr achieves ----", lUsr.CurrentAchieves)
 
 		lTime = time.Date(2022, time.June, 7, 11, 11, 0, 0, time.Local)
 		lUsr.AddAchieve(lTime, 7, logCh)
-		_, ok = lUsr.TempAchieves[22]
-		require.True(t, ok)
+		//_, ok = lUsr.TempAchieves[22]
+		//require.True(t, ok)
 
 		fmt.Println("---- temp achieves ----", lUsr.TempAchieves)
 		fmt.Println("---- curr achieves ----", lUsr.CurrentAchieves)
 
 		lTime = time.Date(2022, time.June, 7, 11, 11, 0, 0, time.Local)
-		lUsr.AddAchieve(lTime, 8, logCh)
-		_, ok = lUsr.TempAchieves[22]
-		require.True(t, ok)
+		lUsr.AddAchieve(lTime, 4, logCh)
+		//_, ok = lUsr.TempAchieves[22]
+		//require.True(t, ok)
 
 		fmt.Println("---- temp achieves ----", lUsr.TempAchieves)
 		fmt.Println("---- curr achieves ----", lUsr.CurrentAchieves)
 
-		_, ok = lUsr.CurrentAchieves[22]
+		lTime = time.Date(2022, time.June, 7, 11, 11, 0, 0, time.Local)
+		lUsr.AddAchieve(lTime, 13, logCh)
+		//_, ok = lUsr.TempAchieves[22]
+		//require.True(t, ok)
+
+		fmt.Println("---- temp achieves ----", lUsr.TempAchieves)
+		fmt.Println("---- curr achieves ----", lUsr.CurrentAchieves)
+
+		_, ok := lUsr.CurrentAchieves[22]
 
 		//_, threetenok := lUsr.TempAchieves[131]
 		//_, twoOk := lUsr.TempAchieves[21]
@@ -336,8 +362,8 @@ func TestUser_AddAchieve(t *testing.T) {
 
 
 
-		_, ok := lUsr.CurrentAchieves[91]
-		require.True(t, ok)
+		//_, ok := lUsr.CurrentAchieves[91]
+		//require.True(t, ok)
 
 		lUsr.AddAchieve(lTime, 9, logCh)
 
@@ -346,7 +372,7 @@ func TestUser_AddAchieve(t *testing.T) {
 
 
 
-		_, ok = lUsr.CurrentAchieves[91]
+		_, ok := lUsr.CurrentAchieves[91]
 		require.True(t, ok)
 
 	})

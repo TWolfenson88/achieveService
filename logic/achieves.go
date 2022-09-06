@@ -194,6 +194,15 @@ func (u *User) AddAchieve(scanTime time.Time, locId int, logCh chan string) {
 					u.UsrLvl = 2
 				}
 
+				_, one := u.CurrentAchieves[31]
+				_, two := u.CurrentAchieves[41]
+				_, swn := u.CurrentAchieves[72]
+				_, nine := u.CurrentAchieves[92]
+
+				if one && two && swn && nine && u.UsrLvl == 2 {
+					u.UsrLvl = 3
+				}
+
 				logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", u.Id, tempUsrAch.Name, tempUsrAch.AchieveLvl)
 
 			} else if ok && achieve.ScansCountForLvl != nil {
