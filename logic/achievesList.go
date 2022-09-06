@@ -294,7 +294,16 @@ var achList = AchieveList{
 
 				// тут, наверное, ничего
 
-				return true
+				usr.TempAchieves[21] = &UserAchieve{
+					AchieveId:        21,
+					AchieveLvl:       0,
+					MaxLvl:           0,
+					ScanCount:        0,
+					Name:             "",
+					LastScan:         scanTime,
+					ScannedLocations: nil,
+				}
+				return false
 			},
 		},
 		{
@@ -904,7 +913,16 @@ var achList = AchieveList{
 
 				// тут, наверное, ничего
 
-				return true
+				usr.TempAchieves[83] = &UserAchieve{
+					AchieveId:        83,
+					AchieveLvl:       0,
+					MaxLvl:           0,
+					ScanCount:        0,
+					Name:             "",
+					LastScan:         scanTime,
+					ScannedLocations: nil,
+				}
+				return false
 			},
 		},
 		{
@@ -1383,9 +1401,19 @@ var achList = AchieveList{
 					delete(usr.TempAchieves, 83)
 				}
 
+				usr.TempAchieves[131] = &UserAchieve{
+					AchieveId:        131,
+					AchieveLvl:       0,
+					MaxLvl:           0,
+					ScanCount:        0,
+					Name:             "",
+					LastScan:         scanTime,
+					ScannedLocations: nil,
+				}
+
 				// тут, наверное, ничего
 
-				return true
+				return false
 			},
 		},
 		{
