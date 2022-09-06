@@ -293,7 +293,7 @@ var achList = AchieveList{
 				_, shOk := usr.TempAchieves[42]
 				_, grOk := usr.TempAchieves[51]
 
-				if eOk || shOk || grOk {
+				if eOk || shOk || grOk || usr.UsrLvl != 3 {
 					return false
 				}
 

@@ -244,7 +244,7 @@ func TestUser_AddAchieve(t *testing.T) {
 		require.False(t, threetenok)
 		require.False(t, twoOk)
 
-	
+
 	})
 
 	t.Run("ERIC way achieve test", func(t *testing.T) {
