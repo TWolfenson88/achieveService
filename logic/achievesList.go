@@ -1542,7 +1542,7 @@ var achList = AchieveList{
 						aciv.AchieveLvl = 1
 						aciv.Name = "ПУТЬ ДЭВИДА ПРОЙДЕН"
 
-						usr.CurrentAchieves[42] = aciv
+						usr.CurrentAchieves[51] = aciv
 					}
 				}
 				return false
