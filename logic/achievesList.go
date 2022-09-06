@@ -250,6 +250,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[51].AchieveLvl++
 						usr.TempAchieves[51].ScannedLocations = append(usr.TempAchieves[51].ScannedLocations, 1)
 					}
 				}
@@ -375,6 +376,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 3, добавляем эту локу
+						usr.TempAchieves[42].AchieveLvl++
 						usr.TempAchieves[42].ScannedLocations = append(usr.TempAchieves[42].ScannedLocations, 2)
 					}
 				}
@@ -415,7 +417,7 @@ var achList = AchieveList{
 					delete(usr.TempAchieves, 21) //удаляем старт прогресса
 
 					usrAch := &UserAchieve{
-						AchieveId:        ach.Id,
+						AchieveId:        31,
 						AchieveLvl:       1,
 						MaxLvl:           1,
 						ScanCount:        1,
@@ -425,7 +427,7 @@ var achList = AchieveList{
 					}
 
 					logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", usr.Id, usrAch.Name, usrAch.AchieveLvl)
-					usr.CurrentAchieves[ach.Id] = usrAch // и добавляем её если всё збс
+					usr.CurrentAchieves[31] = usrAch // и добавляем её если всё збс
 
 				}
 
@@ -505,7 +507,7 @@ var achList = AchieveList{
 					delete(usr.TempAchieves, 131) //удаляем старт прогресса
 
 					usrAch := &UserAchieve{
-						AchieveId:        ach.Id,
+						AchieveId:        41,
 						AchieveLvl:       1,
 						MaxLvl:           1,
 						ScanCount:        1,
@@ -515,7 +517,7 @@ var achList = AchieveList{
 					}
 
 					logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", usr.Id, usrAch.Name, usrAch.AchieveLvl)
-					usr.CurrentAchieves[ach.Id] = usrAch // и добавляем её если всё збс
+					usr.CurrentAchieves[41] = usrAch // и добавляем её если всё збс
 
 				}
 
@@ -590,6 +592,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 3, добавляем эту локу
+						usr.TempAchieves[22].AchieveLvl++
 						usr.TempAchieves[22].ScannedLocations = append(usr.TempAchieves[22].ScannedLocations, 4)
 					}
 				}
@@ -667,6 +670,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[32].AchieveLvl++
 						usr.TempAchieves[32].ScannedLocations = append(usr.TempAchieves[32].ScannedLocations, 5)
 					}
 				}
@@ -704,6 +708,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 3, добавляем эту локу
+						usr.TempAchieves[42].AchieveLvl++
 						usr.TempAchieves[42].ScannedLocations = append(usr.TempAchieves[42].ScannedLocations, 6)
 					}
 				}
@@ -757,7 +762,7 @@ var achList = AchieveList{
 					delete(usr.TempAchieves, 83) //удаляем старт прогресса
 
 					usrAch := &UserAchieve{
-						AchieveId:        ach.Id,
+						AchieveId:        72,
 						AchieveLvl:       1,
 						MaxLvl:           1,
 						ScanCount:        1,
@@ -767,7 +772,7 @@ var achList = AchieveList{
 					}
 
 					logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", usr.Id, usrAch.Name, usrAch.AchieveLvl)
-					usr.CurrentAchieves[ach.Id] = usrAch // и добавляем её если всё збс
+					usr.CurrentAchieves[72] = usrAch // и добавляем её если всё збс
 
 				}
 
@@ -802,6 +807,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 3, добавляем эту локу
+						usr.TempAchieves[22].AchieveLvl++
 						usr.TempAchieves[22].ScannedLocations = append(usr.TempAchieves[22].ScannedLocations, 7)
 					}
 				}
@@ -836,6 +842,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[51].AchieveLvl++
 						usr.TempAchieves[51].ScannedLocations = append(usr.TempAchieves[51].ScannedLocations, 7)
 					}
 				}
@@ -966,6 +973,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[32].AchieveLvl++
 						usr.TempAchieves[32].ScannedLocations = append(usr.TempAchieves[32].ScannedLocations, 8)
 					}
 				}
@@ -1000,6 +1008,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 3, добавляем эту локу
+						usr.TempAchieves[42].AchieveLvl++
 						usr.TempAchieves[42].ScannedLocations = append(usr.TempAchieves[42].ScannedLocations, 8)
 					}
 				}
@@ -1034,6 +1043,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[51].AchieveLvl++
 						usr.TempAchieves[51].ScannedLocations = append(usr.TempAchieves[51].ScannedLocations, 8)
 					}
 				}
@@ -1085,7 +1095,7 @@ var achList = AchieveList{
 					delete(usr.TempAchieves, 131) //удаляем старт прогресса
 
 					usrAch := &UserAchieve{
-						AchieveId:        ach.Id,
+						AchieveId:        92,
 						AchieveLvl:       1,
 						MaxLvl:           1,
 						ScanCount:        1,
@@ -1095,7 +1105,7 @@ var achList = AchieveList{
 					}
 
 					logCh <- fmt.Sprintf("%d получил ачивку %s уровня %d", usr.Id, usrAch.Name, usrAch.AchieveLvl)
-					usr.CurrentAchieves[ach.Id] = usrAch // и добавляем её если всё збс
+					usr.CurrentAchieves[92] = usrAch // и добавляем её если всё збс
 
 				}
 
@@ -1130,6 +1140,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[22].AchieveLvl++
 						usr.TempAchieves[22].ScannedLocations = append(usr.TempAchieves[22].ScannedLocations, 9)
 					}
 				}
@@ -1164,6 +1175,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[32].AchieveLvl++
 						usr.TempAchieves[32].ScannedLocations = append(usr.TempAchieves[32].ScannedLocations, 9)
 					}
 				}
@@ -1213,6 +1225,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[32].AchieveLvl++
 						usr.TempAchieves[32].ScannedLocations = append(usr.TempAchieves[32].ScannedLocations, 10)
 					}
 				}
@@ -1247,6 +1260,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[51].AchieveLvl++
 						usr.TempAchieves[51].ScannedLocations = append(usr.TempAchieves[51].ScannedLocations, 10)
 					}
 				}
@@ -1297,6 +1311,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 2, добавляем эту локу
+						usr.TempAchieves[22].AchieveLvl++
 						usr.TempAchieves[22].ScannedLocations = append(usr.TempAchieves[22].ScannedLocations, 11)
 					}
 				}
@@ -1331,6 +1346,7 @@ var achList = AchieveList{
 						}
 					} else {
 						//если последняя отсканеная лока 3, добавляем эту локу
+						usr.TempAchieves[42].AchieveLvl++
 						usr.TempAchieves[42].ScannedLocations = append(usr.TempAchieves[42].ScannedLocations, 11)
 					}
 				}
@@ -1447,7 +1463,7 @@ var achList = AchieveList{
 						usr.TempAchieves[22].ScannedLocations = append(usr.TempAchieves[22].ScannedLocations, 13)
 
 						aciv.LastScan = scanTime
-						aciv.AchieveLvl = 1
+						aciv.AchieveLvl++
 						aciv.Name = "ПУТЬ МАКСВЕЛЛА ПРОЙДЕН"
 
 						usr.CurrentAchieves[22] = aciv
@@ -1487,7 +1503,7 @@ var achList = AchieveList{
 						usr.TempAchieves[32].ScannedLocations = append(usr.TempAchieves[32].ScannedLocations, 13)
 
 						aciv.LastScan = scanTime
-						aciv.AchieveLvl = 1
+						aciv.AchieveLvl++
 						aciv.Name = "ПУТЬ РЕЯ ПРОЙДЕН"
 
 						usr.CurrentAchieves[32] = aciv
@@ -1527,7 +1543,7 @@ var achList = AchieveList{
 						usr.TempAchieves[42].ScannedLocations = append(usr.TempAchieves[42].ScannedLocations, 13)
 
 						aciv.LastScan = scanTime
-						aciv.AchieveLvl = 1
+						aciv.AchieveLvl++
 						aciv.Name = "ПУТЬ эрики ПРОЙДЕН"
 
 						usr.CurrentAchieves[42] = aciv
@@ -1567,7 +1583,7 @@ var achList = AchieveList{
 						usr.TempAchieves[51].ScannedLocations = append(usr.TempAchieves[51].ScannedLocations, 51)
 
 						aciv.LastScan = scanTime
-						aciv.AchieveLvl = 1
+						aciv.AchieveLvl++
 						aciv.Name = "ПУТЬ ДЭВИДА ПРОЙДЕН"
 
 						usr.CurrentAchieves[51] = aciv
