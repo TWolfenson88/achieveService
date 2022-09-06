@@ -273,15 +273,6 @@ var achList = AchieveList{
 			NeedLocations:    nil,
 			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
 
-				_, nineOk := usr.CurrentAchieves[92]
-				_, fourOk := usr.CurrentAchieves[41]
-				_, sevenOk := usr.CurrentAchieves[72]
-				_, threeOk := usr.CurrentAchieves[31]
-
-				if nineOk || fourOk || sevenOk || threeOk { //Если у нас получена какая-либо из финишных ачивок 13-9, 13-4, 2-3, 8-7, то не засчитываем это
-					return false
-				}
-
 				if usr.UsrLvl != 2 {
 					return false
 				}
