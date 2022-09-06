@@ -245,6 +245,28 @@ var achList = AchieveList{
 					return false
 				}
 
+
+				if usr.UsrLvl != 2 {
+					return false
+				}
+
+
+				if _, okok := usr.CurrentAchieves[31]; okok {
+					return false
+				}
+
+
+				_, twok := usr.TempAchieves[83] //проверяем, есть ли отсканированные другие ачивы
+				_, eOk := usr.TempAchieves[131]
+
+				if twok {
+					delete(usr.TempAchieves, 83) //и удаляем их прогресс, если есть
+				}
+
+				if eOk {
+					delete(usr.TempAchieves, 131)
+				}
+
 				// тут, наверное, ничего
 
 				return true
@@ -558,7 +580,7 @@ var achList = AchieveList{
 						delete(usr.TempAchieves, 131)
 					}
 
-					delete(usr.TempAchieves, 72) //удаляем старт прогресса
+					delete(usr.TempAchieves, 83) //удаляем старт прогресса
 
 					usrAch := &UserAchieve{
 						AchieveId:        ach.Id,
@@ -579,8 +601,8 @@ var achList = AchieveList{
 			},
 		},
 		{
-			Id:               43,
-			IdLoc:            4,
+			Id:               73,
+			IdLoc:            7,
 			MaxLevel:         1,
 			BeginLevel:       0,
 			ScansCountForLvl: nil,
@@ -667,14 +689,37 @@ var achList = AchieveList{
 			NeedAchieves:     nil,
 			NeedLocations:    nil,
 			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
-				_, nineOk := usr.CurrentAchieves[92]
+			/*	_, nineOk := usr.CurrentAchieves[92]
 				_, fourOk := usr.CurrentAchieves[41]
 				_, sevenOk := usr.CurrentAchieves[72]
 				_, threeOk := usr.CurrentAchieves[31]
 
 				if nineOk || fourOk || sevenOk || threeOk { //Если у нас получена какая-либо из финишных ачивок 13-9, 13-4, 2-3, 8-7, то не засчитываем это
 					return false
+				}*/
+
+				if usr.UsrLvl != 2 {
+					return false
 				}
+
+
+				if _, okok := usr.CurrentAchieves[72]; okok {
+					return false
+				}
+
+
+				_, twok := usr.TempAchieves[21] //проверяем, есть ли отсканированные другие ачивы
+				_, eOk := usr.TempAchieves[131]
+
+				if twok {
+					delete(usr.TempAchieves, 21) //и удаляем их прогресс, если есть
+				}
+
+				if eOk {
+					delete(usr.TempAchieves, 131)
+				}
+
+
 
 				// тут, наверное, ничего
 
@@ -683,7 +728,7 @@ var achList = AchieveList{
 		},
 		{
 			Id:               84,
-			IdLoc:            4,
+			IdLoc:            8,
 			MaxLevel:         1,
 			BeginLevel:       0,
 			ScansCountForLvl: nil,
@@ -846,13 +891,37 @@ var achList = AchieveList{
 			NeedLocations:    nil,
 			SpecialLogic: func(usr *User, ach *Achieve, locId int, scanTime time.Time, logCh chan string) bool {
 
-				_, nineOk := usr.CurrentAchieves[92]
+			/*	_, nineOk := usr.CurrentAchieves[92]
 				_, fourOk := usr.CurrentAchieves[41]
 				_, sevenOk := usr.CurrentAchieves[72]
 				_, threeOk := usr.CurrentAchieves[31]
 
 				if nineOk || fourOk || sevenOk || threeOk { //Если у нас получена какая-либо из финишных ачивок 13-9, 13-4, 2-3, 8-7, то не засчитываем это
 					return false
+				}
+*/
+
+				if usr.UsrLvl != 2 {
+					return false
+				}
+
+				_, okok := usr.CurrentAchieves[92]
+				_, okokk := usr.CurrentAchieves[41]
+
+				if  okokk && okok {
+					return false
+				}
+
+
+				_, twok := usr.TempAchieves[21] //проверяем, есть ли отсканированные другие ачивы
+				_, eOk := usr.TempAchieves[83]
+
+				if twok {
+					delete(usr.TempAchieves, 21) //и удаляем их прогресс, если есть
+				}
+
+				if eOk {
+					delete(usr.TempAchieves, 83)
 				}
 
 				// тут, наверное, ничего

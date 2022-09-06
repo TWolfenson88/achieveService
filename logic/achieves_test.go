@@ -210,7 +210,7 @@ func TestUser_AddAchieve(t *testing.T) {
 		//и больше никогда не доступны
 		lUsr := &User{
 			Id:              3,
-			UsrLvl:          0,
+			UsrLvl:          2,
 			TempAchieves:    map[int]*UserAchieve{},
 			CurrentAchieves: map[int]*UserAchieve{},
 		}
@@ -232,9 +232,9 @@ func TestUser_AddAchieve(t *testing.T) {
 		fmt.Println("---- curr achieves ----", lUsr.CurrentAchieves)
 
 		lTime = time.Date(2022, time.June, 7, 11, 42, 0, 0, time.Local) // + 32 минуты, вне диапазона
-		lUsr.AddAchieve(lTime, 9, logCh)
+		lUsr.AddAchieve(lTime, 3, logCh)
 
-		_, ok = lUsr.CurrentAchieves[92]
+		_, ok = lUsr.CurrentAchieves[31]
 
 		_, threetenok := lUsr.TempAchieves[131]
 		_, twoOk := lUsr.TempAchieves[21]
@@ -244,14 +244,7 @@ func TestUser_AddAchieve(t *testing.T) {
 		require.False(t, threetenok)
 		require.False(t, twoOk)
 
-		fmt.Println("---- temp achieves ----", lUsr.TempAchieves)
-		fmt.Println("---- curr achieves ----", lUsr.CurrentAchieves)
-
-		lTime = time.Date(2022, time.June, 7, 11, 42, 0, 0, time.Local) // + 32 минуты, вне диапазона
-		lUsr.AddAchieve(lTime, 13, logCh)
-
-		_, ok = lUsr.TempAchieves[131]
-		require.False(t, ok)
+	
 	})
 
 	t.Run("ERIC way achieve test", func(t *testing.T) {
