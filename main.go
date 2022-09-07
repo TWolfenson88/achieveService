@@ -103,8 +103,13 @@ func (u Users) handleAchieveInfo(w http.ResponseWriter, r *http.Request) {
 		hndlAchs = append(hndlAchs, hAch)
 	}
 
+	achievesToSeen := map[int]struct{}{131:{}, 83:{}, 21:{}, 22:{}, 32:{}, 42:{}, 51:{}} //achieve.AchieveId == 131 || achieve.AchieveId == 83 || achieve.AchieveId == 21 ||
+
 	for _, achieve := range user.TempAchieves {
-		if achieve.AchieveId == 131 || achieve.AchieveId == 83 || achieve.AchieveId == 21 {
+
+		_, okok := achievesToSeen[achieve.AchieveId]
+
+		if okok {
 			hAch := HandlerAchieves{
 				AchieveId:    achieve.AchieveId,
 				AchieveName:  achieve.Name,
