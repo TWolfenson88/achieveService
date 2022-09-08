@@ -339,7 +339,17 @@ var achList = AchieveList{
 						AchieveLvl:       0,
 						MaxLvl:           1,
 						ScanCount:        1,
-						Name:             "",
+						Name:             "Максвелла",
+						LastScan:         scanTime,
+						ScannedLocations: []int{2},
+					}
+				}else {
+					usr.TempAchieves[22] = &UserAchieve{
+						AchieveId:        22,
+						AchieveLvl:       0,
+						MaxLvl:           1,
+						ScanCount:        1,
+						Name:             "Максвелла",
 						LastScan:         scanTime,
 						ScannedLocations: []int{2},
 					}
@@ -474,7 +484,17 @@ var achList = AchieveList{
 						AchieveLvl:       0,
 						MaxLvl:           1,
 						ScanCount:        1,
-						Name:             "",
+						Name:             "Рей",
+						LastScan:         scanTime,
+						ScannedLocations: []int{3},
+					}
+				}else {
+					usr.TempAchieves[32] = &UserAchieve{
+						AchieveId:        32,
+						AchieveLvl:       0,
+						MaxLvl:           1,
+						ScanCount:        1,
+						Name:             "Рей",
 						LastScan:         scanTime,
 						ScannedLocations: []int{3},
 					}
@@ -573,7 +593,17 @@ var achList = AchieveList{
 						AchieveLvl:       0,
 						MaxLvl:           1,
 						ScanCount:        1,
-						Name:             "",
+						Name:             "Эрики",
+						LastScan:         scanTime,
+						ScannedLocations: []int{4},
+					}
+				}else {
+					usr.TempAchieves[42] = &UserAchieve{
+						AchieveId:        42,
+						AchieveLvl:       0,
+						MaxLvl:           1,
+						ScanCount:        1,
+						Name:             "Эрики",
 						LastScan:         scanTime,
 						ScannedLocations: []int{4},
 					}
@@ -651,7 +681,17 @@ var achList = AchieveList{
 						AchieveLvl:       0,
 						MaxLvl:           1,
 						ScanCount:        1,
-						Name:             "",
+						Name:             "Дэвида",
+						LastScan:         scanTime,
+						ScannedLocations: []int{5},
+					}
+				}else {
+					usr.TempAchieves[51] = &UserAchieve{
+						AchieveId:        51,
+						AchieveLvl:       0,
+						MaxLvl:           1,
+						ScanCount:        1,
+						Name:             "Дэвида",
 						LastScan:         scanTime,
 						ScannedLocations: []int{5},
 					}
